@@ -1,0 +1,4 @@
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=ALIASAD2710_employee_management_system)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=ALIASAD2710_employee_management_system&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=ALIASAD2710_employee_management_system)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=ALIASAD2710_employee_management_system&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=ALIASAD2710_employee_management_system)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=ALIASAD2710_employee_management_system&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=ALIASAD2710_employee_management_system)

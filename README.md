@@ -1,4 +1,6 @@
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=ALIASAD2710_employee_management_system)
+Sonar Cloud [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ALIASAD2710_employee_management_system&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ALIASAD2710_employee_management_system
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=ALIASAD2710_employee_management_system&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=ALIASAD2710_employee_management_system)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=ALIASAD2710_employee_management_system&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=ALIASAD2710_employee_management_system)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=ALIASAD2710_employee_management_system&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=ALIASAD2710_employee_management_system)
+Code Coverall[![Coverage Status](https://coveralls.io/repos/github/ALIASAD2710/employee_management_system/badge.svg?branch=main)](https://coveralls.io/github/ALIASAD2710/employee_management_system?branch=main)
+GitHub Actions [![Java CI with Maven](https://github.com/ALIASAD2710/employee_management_system/actions/workflows/maven-publish.yml/badge.svg)](https://github.com/ALIASAD2710/employee_management_system/actions/workflows/maven-publish.yml)

@@ -93,11 +93,12 @@
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>3.10.0.2594</version>
         </plugin>
-       <plugin>
+        <plugin>
 				<groupId>org.eluder.coveralls</groupId>
 				<artifactId>coveralls-maven-plugin</artifactId>
 				<version>4.3.0</version>
 				<configuration>
+					<repoToken>${coveralls.repoToken}</repoToken>
 					<jacocoReports>
 						<jacocoReport>${project.build.directory}/jacoco-ut/jacoco.xml</jacocoReport>
 						<jacocoReport>${project.build.directory}/jacoco-it/jacoco.xml</jacocoReport>
@@ -112,6 +113,7 @@
 					</dependency>
 				</dependencies>
 				</plugin>
+       
         <!-- Jacoco Plugin -->
         <plugin>
             <groupId>org.jacoco</groupId>

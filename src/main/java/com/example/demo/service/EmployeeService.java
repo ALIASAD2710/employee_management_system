@@ -8,12 +8,15 @@ import com.example.demo.entity.Employee;
 
 @Service
 public class EmployeeService {
-	
-	@Autowired
-    private EmployeeRepository employeeRepository;
-	
-	public Employee saveEmployee(Employee employee) {
-        return employeeRepository.save(employee);
+
+    private final EmployeeRepository employeeRepository;
+
+    @Autowired
+    public EmployeeService(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
     }
 
+    public Employee saveEmployee(Employee employee) {
+        return employeeRepository.save(employee);
+    }
 }

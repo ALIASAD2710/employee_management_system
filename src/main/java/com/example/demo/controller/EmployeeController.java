@@ -13,8 +13,12 @@ import com.example.demo.service.EmployeeService;
 @RequestMapping("/employees")
 public class EmployeeController 
 {
-	@Autowired
-    private EmployeeService employeeService;
+	private final EmployeeService employeeService;
+
+    @Autowired
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
 
 	
 	@PostMapping("/save")

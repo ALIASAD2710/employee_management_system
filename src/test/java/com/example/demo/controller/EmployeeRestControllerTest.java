@@ -18,7 +18,7 @@ import com.example.demo.entity.Employee;
 import com.example.demo.service.EmployeeService;
 
 @SpringBootTest
-public class EmployeeRestControllerTest {
+class EmployeeRestControllerTest {
 	private MockMvc mockMvc;
 
 	@Mock

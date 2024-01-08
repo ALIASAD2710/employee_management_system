@@ -24,7 +24,7 @@ public class EmployeeController
 
 	
 	@PostMapping("/save")
-	public ResponseEntity<?> saveEmployee(@Valid @RequestBody Employee employee, BindingResult bindingResult) {
+	public ResponseEntity<Object> saveEmployee(@Valid @RequestBody Employee employee, BindingResult bindingResult) {
 	    if (bindingResult.hasErrors()) {
 	        // Handle validation errors
 	        return ResponseEntity.badRequest().body("Validation errors");

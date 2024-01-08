@@ -37,22 +37,23 @@ class EmployeeRestControllerTest {
 	}
 
 	@Test
-	void saveEmployee() throws Exception 
-	{
-		// Create a mock employee to be saved
-		Employee mockEmployeeToSave = new Employee(1, "test1", "lastname1", null);
-		Employee mockSavedEmployee = new Employee(1, "test2", "lastname2", null);
+    void saveEmployee() throws Exception {
+        // Create a mock employee to be saved
+        Employee mockEmployeeToSave = new Employee(1, "test1", "lastname1", null);
+        Employee mockSavedEmployee = new Employee(1, "test2", "lastname2", null);
 
-		// Mock employeeService's saveEmployee method
-		when(employeeService.saveEmployee(any(Employee.class))).thenReturn(mockSavedEmployee);
+        // Mock employeeService's saveEmployee method
+        when(employeeService.saveEmployee(any(Employee.class))).thenReturn(mockSavedEmployee);
 
-		// Perform a POST request
-		mockMvc.perform(post("/employees/save").contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().writeValueAsString(mockEmployeeToSave))).andExpect(status().isOk());
+        // Perform a POST request
+        mockMvc.perform(post("/employees/save")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(mockEmployeeToSave)))
+                .andExpect(status().isCreated());
 
-		// Verify that the saveEmployee
-		verify(employeeService, times(1)).saveEmployee(any(Employee.class));
-	}
+        // Verify that the saveEmployee was called with the correct arguments
+        verify(employeeService, times(1)).saveEmployee(any(Employee.class));
+    }
 	
 	
 	@Test

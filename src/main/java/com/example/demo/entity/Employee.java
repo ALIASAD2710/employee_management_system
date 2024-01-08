@@ -14,8 +14,10 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    
     @NotBlank(message = "Please write your name")
     private String firstName;
+    
     @NotBlank(message = "Please write your last name")
     private String lastName;
 

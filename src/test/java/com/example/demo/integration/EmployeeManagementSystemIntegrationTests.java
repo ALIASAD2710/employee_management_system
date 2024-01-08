@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.example.demo.controller.EmployeeController;
 
 @SpringBootTest
-public class EmployeeManagementSystemIntegrationTests 
+class EmployeeManagementSystemIntegrationTests 
 {
 	@Autowired
 	EmployeeController employeeController;

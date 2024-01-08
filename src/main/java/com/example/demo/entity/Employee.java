@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Employee {
@@ -13,8 +14,9 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    @NotBlank(message = "Please write your name")
     private String firstName;
+    @NotBlank(message = "Please write your last name")
     private String lastName;
 
     @ManyToOne

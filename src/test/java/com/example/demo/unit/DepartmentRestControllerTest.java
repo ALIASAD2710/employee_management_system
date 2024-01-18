@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.unit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.example.demo.controller.DepartmentController;
 import com.example.demo.entity.Department;
 import com.example.demo.service.DepartmentService;
 

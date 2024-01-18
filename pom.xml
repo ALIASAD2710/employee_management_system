@@ -17,6 +17,16 @@
 		<java.version>17</java.version>
 		<sonar.organization>aliasad2710</sonar.organization>
   		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+  		<sonar.coverage.exclusions>
+			**/EmployeeManagementSystemApplication.*,
+			**/entity/*.*,
+			**/dto/*.*
+		</sonar.coverage.exclusions>
+		<sonar.exclusions>
+			**/EmployeeManagementSystemApplication.*,
+			**/entity/*.*,
+			**/dto/*.*
+		</sonar.exclusions>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -119,20 +129,22 @@
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>0.8.8</version> 
-            <executions>
-                <execution>
-                    <id>default-prepare-agent</id>
-                    <goals>
-                        <goal>prepare-agent</goal>
-                    </goals>
-                </execution>
-                <execution>
-                    <id>default-report</id>
-                    <goals>
-                        <goal>report</goal>
-                    </goals>
-                </execution>
-            </executions>
+            <configuration>
+					<excludes>
+						<exclude>**/EmployeeManagementSystemApplication.*</exclude>
+						<exclude>**/entity/*.*</exclude>
+						<exclude>**/dto/*.*</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
         </plugin>
 		</plugins>
 	</build>

@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -32,11 +30,11 @@ public class EmployeeController
     @PostMapping("/save")
     public ResponseEntity<Object> saveEmployee(@Valid @RequestBody Employee employee, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            // Extract field-specific validation errors
+            // validation errors
             List<String> validationErrors = bindingResult.getFieldErrors()
                     .stream()
                     .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                    .collect(Collectors.toList());
+                    .toList();  
 
             // Build a dynamic error message
             String errorMessage = "Validation errors: " + String.join(", ", validationErrors);
@@ -47,4 +45,5 @@ public class EmployeeController
         Employee savedEmployee = employeeService.saveEmployee(employee);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployee);
     }
+
 }

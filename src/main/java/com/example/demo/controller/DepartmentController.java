@@ -16,10 +16,10 @@ import com.example.demo.service.DepartmentService;
 @RequestMapping("/department")
 public class DepartmentController 
 {
-	@Autowired
+	
 	private final DepartmentService departmentService;
 	
-	
+	@Autowired
 	public DepartmentController(DepartmentService departmentService)
 	{
 		this.departmentService = departmentService;

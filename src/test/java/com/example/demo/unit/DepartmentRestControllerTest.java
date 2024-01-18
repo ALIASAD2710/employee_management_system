@@ -39,7 +39,7 @@ class DepartmentRestControllerTest {
     }
 
     @Test
-    public void testSaveDepartment() throws Exception {
+    void testSaveDepartment() throws Exception {
         Department department = new Department(1, "HR", null);
 
         Mockito.when(departmentService.saveDepartment(any(Department.class))).thenReturn(department);

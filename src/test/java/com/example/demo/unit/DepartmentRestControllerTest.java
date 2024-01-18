@@ -24,12 +24,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class DepartmentRestControllerTest {
 
     private MockMvc mockMvc;
+    
+    @Mock
+    DepartmentService departmentService;
 
     @InjectMocks
     private DepartmentController departmentController;
 
-    @Mock
-    DepartmentService departmentService;
+   
 
     @BeforeEach
     void setUp() {

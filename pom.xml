@@ -17,13 +17,13 @@
 		<java.version>17</java.version>
 		<sonar.organization>aliasad2710</sonar.organization>
   		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-  		<sonar.coverage.exclusions>
-			
+		<sonar.coverage.exclusions>
+			**/EmployeeManagementSystemApplication.*,
 			**/entity/*.*,
 			**/dto/*.*
 		</sonar.coverage.exclusions>
 		<sonar.exclusions>
-			
+			**/EmployeeManagementSystemApplication.*,
 			**/entity/*.*,
 			**/dto/*.*
 		</sonar.exclusions>
@@ -57,12 +57,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
@@ -79,11 +73,7 @@
 		    <version>8.0.1.Final</version>
 		</dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
+		
 		
 	</dependencies>
 
@@ -97,35 +87,16 @@
 			</plugin>
 			
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.surefire</groupId>
-						<artifactId>surefire-junit4</artifactId>
-						<version>${maven-surefire-plugin.version}</version>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-					</execution>					
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.surefire</groupId>
-						<artifactId>surefire-junit4</artifactId>
-						<version>${maven-surefire-plugin.version}</version>
-					</dependency>
-				</dependencies>
-			</plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+                <includes>
+                    <!-- Include both unit and integration tests -->
+                    <include>**/EmployeeManagementSystem*Tests.java</include>
+                    <include>**/integration/**/*Test.java</include>
+                </includes>
+            </configuration>
+        </plugin>
         
         <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
@@ -157,23 +128,28 @@
         <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.8</version> 
-            <configuration>
+            <version>0.8.8</version>
+			<configuration>
 					<excludes>
-						
+						<exclude>**/EmployeeManagementSystemApplication.*</exclude>
 						<exclude>**/entity/*.*</exclude>
 						<exclude>**/dto/*.*</exclude>
 					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<id>prepare-agent</id>
-						<goals>
-							<goal>prepare-agent</goal>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
+				</configuration>			
+            <executions>
+                <execution>
+                    <id>default-prepare-agent</id>
+                    <goals>
+                        <goal>prepare-agent</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>default-report</id>
+                    <goals>
+                        <goal>report</goal>
+                    </goals>
+                </execution>
+            </executions>
         </plugin>
 		</plugins>
 	</build>

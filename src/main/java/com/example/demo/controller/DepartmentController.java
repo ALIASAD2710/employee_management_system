@@ -4,12 +4,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
-import com.example.demo.dto.DepartmentDto;
 import com.example.demo.entity.Department;
 import com.example.demo.service.DepartmentService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/department")
@@ -24,26 +29,28 @@ public class DepartmentController
 	}
 	
 	@PostMapping("/save")
-	public ResponseEntity<DepartmentDto> saveDepartment(@RequestBody DepartmentDto departmentDto)
+	public ResponseEntity<Object> saveDepartment(@Valid @RequestBody Department department, BindingResult bindingResult)
 	{
-			
-		Department department = new Department(
-				
-				departmentDto.getId(),
-				departmentDto.getName(),
-				departmentDto.getEmployees()
-				);
-		Department saveDepartment = departmentService.saveDepartment(department);
+		if (bindingResult.hasErrors()) {
+            // validation errors
+            List<String> validationErrors = bindingResult.getFieldErrors()
+                    .stream()
+                    .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                    .toList();  
+
+            // Build a dynamic error message
+            String errorMessage = "Validation errors: " + String.join(", ", validationErrors);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+        }
 		
-		DepartmentDto saveDepartmentDto = new DepartmentDto(
-				
-				saveDepartment.getId(),
-				saveDepartment.getName(),
-				saveDepartment.getEmployees()
-				);
-		
-		return new ResponseEntity<>(saveDepartmentDto, HttpStatus.CREATED);
+		Department savedDepartment = departmentService.saveDepartment(department);
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedDepartment);
 	}
+	
+	
+	
+	
 	
 
 }

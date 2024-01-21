@@ -1,9 +1,7 @@
 package com.example.demo.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -38,7 +36,7 @@ public class DepartmentController
                     .map(error -> error.getField() + ": " + error.getDefaultMessage())
                     .toList();  
 
-            // Build a dynamic error message
+            // error message
             String errorMessage = "Validation errors: " + String.join(", ", validationErrors);
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
@@ -49,7 +47,12 @@ public class DepartmentController
 	}
 	
 	
-	
+	@GetMapping("/getAll")
+    public ResponseEntity<List<Department>> getAllDepartments() 
+	{
+        List<Department> departments = departmentService.getAllDepartments();
+        return new ResponseEntity<>(departments, HttpStatus.OK);
+    }
 	
 	
 

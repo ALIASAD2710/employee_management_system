@@ -6,6 +6,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -28,9 +31,9 @@ class DepartmentServiceTest
 	void saveDepartment()
 	{
 		
-		// create a mock department to be saved
+		// create 
 		Department mockDepartmentToSave = new Department(1, "HR", null);
-		Department mockSaveddepartment = new Department(1, "Sales", null);
+		Department mockSaveddepartment = new Department(2, "Sales", null);
 		
 		//when Mock
 		when(departmentRepository.save(any(Department.class))).thenReturn(mockSaveddepartment);
@@ -45,6 +48,24 @@ class DepartmentServiceTest
 		assertEquals(mockSaveddepartment, savedDepartment);
 		
 	}
+	
+	
+	@Test
+    void getAllDepartments() 
+	{
+		List<Department> department = new ArrayList<>();
+    	department.add(new Department(1, "HR", null));
+    	department.add(new Department(2, "Sale", null));
+    	
+        // Mock
+        when(departmentRepository.findAll()).thenReturn(department);
+
+        
+        List<Department> departments = departmentService.getAllDepartments();
+
+        // Assert
+        assertEquals(2, departments.size());
+    }
 	
 	
 	

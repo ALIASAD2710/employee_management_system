@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dao.EmployeeRepository;
@@ -17,4 +19,11 @@ public class EmployeeService {
     public Employee saveEmployee(Employee employee) {
     	return employeeRepository.save(employee);
     }
+
+	public List<Employee> getAllEmployee() 
+	{
+		return employeeRepository.findAll();
+	}
+	
+	
 }

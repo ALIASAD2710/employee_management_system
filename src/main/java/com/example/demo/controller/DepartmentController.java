@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,27 @@ public class DepartmentController
 	{
         List<Department> departments = departmentService.getAllDepartments();
         return new ResponseEntity<>(departments, HttpStatus.OK);
+    }
+	
+	
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Department> getDepartmentById(@PathVariable int id) {
+	    Optional<Department> optionalDepartment = departmentService.getDepartmentById(id);
+	    if (optionalDepartment.isPresent()) {
+	        return ResponseEntity.ok(optionalDepartment.get());
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
+	
+	
+	@DeleteMapping("/delete/{id}")
+    public void deleteDepartmentById(@PathVariable int id) 
+	{
+        departmentService.deleteDepartmentById(id);
+        
     }
 	
 	

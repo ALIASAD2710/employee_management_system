@@ -1,13 +1,16 @@
 package com.example.demo.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -29,14 +32,14 @@ class EmployeeServiceTest {
     @Test
     void saveEmployee() 
     {
-        // Create a mock employee to be saved
+        // Create
         Employee mockEmployeeToSave = new Employee(1, "test1", "lastname1", null);
         Employee mockSavedEmployee = new Employee(2, "test2", "lastname2", null);
 
-        // Mock employeeRepository's save method
+        // Mock
         when(employeeRepository.save(any(Employee.class))).thenReturn(mockSavedEmployee);
 
-        // Call the saveEmployee method
+        
         Employee savedEmployee = employeeService.saveEmployee(mockEmployeeToSave);
 
         // Verify 
@@ -50,6 +53,7 @@ class EmployeeServiceTest {
     @Test
     void testGetAllEmployee() 
 	{
+    	// Create
 		List<Employee> employee = new ArrayList<>();
 		employee.add(new Employee(1, "test1", "lastname1", null));
 		employee.add(new Employee(2, "test2", "lastname2", null));
@@ -62,6 +66,63 @@ class EmployeeServiceTest {
 
         // Assert
         assertEquals(2, employees.size());
+    }
+    
+    
+    @Test
+    void getEmployeeById() {
+    	// Create
+        Employee mockEmployee = new Employee(1, "John", "Doe", null);
+        when(employeeRepository.findById(1)).thenReturn(Optional.of(mockEmployee));
+
+        
+        Optional<Employee> result = employeeService.getEmployeeById(1);
+
+        // Verify
+        assertTrue(result.isPresent());
+        assertEquals(mockEmployee, result.get());
+        verify(employeeRepository, times(1)).findById(1);
+    }
+    
+    
+    @Test
+    void getEmployeesByDepartmentId() {
+        // Create
+        int departmentId = 1;
+        List<Employee> mockEmployees = new ArrayList<>();
+        mockEmployees.add(new Employee(1, "Test1", "Lastname1", null));
+        mockEmployees.add(new Employee(2, "Test2", "Lastname2", null));
+
+        // Mock
+        when(employeeRepository.findByDepartmentId(departmentId)).thenReturn(mockEmployees);
+
+        
+        List<Employee> result = employeeService.getEmployeesByDepartmentId(departmentId);
+
+        
+        assertEquals(mockEmployees.size(), result.size());
+        for (int i = 0; i < mockEmployees.size(); i++) {
+            assertEquals(mockEmployees.get(i), result.get(i));
+        }
+
+        // Verify
+        verify(employeeRepository, times(1)).findByDepartmentId(departmentId);
+    }
+    
+    
+    @Test
+    void deleteEmployeeById() {
+        
+        int id = 1;
+
+        // Mock
+        doNothing().when(employeeRepository).deleteById(id);
+
+        
+        employeeService.deleteEmployeeById(id);
+
+        // Verify
+        verify(employeeRepository, times(1)).deleteById(id);
     }
 }
 

@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,60 +46,121 @@ class EmployeeRestControllerTest {
 	}
 
 	@Test
-    void saveEmployee() throws Exception {
-        // Create a mock employee to be saved
-        Employee mockEmployeeToSave = new Employee(1, "test1", "lastname1", null);
-        Employee mockSavedEmployee = new Employee(2, "test2", "lastname2", null);
+	void saveEmployee() throws Exception {
+		// Create
+		Employee mockEmployeeToSave = new Employee(1, "test1", "lastname1", null);
+		Employee mockSavedEmployee = new Employee(2, "test2", "lastname2", null);
 
-        // Mock employeeService's saveEmployee method
-        when(employeeService.saveEmployee(any(Employee.class))).thenReturn(mockSavedEmployee);
+		// Mock
+		when(employeeService.saveEmployee(any(Employee.class))).thenReturn(mockSavedEmployee);
 
-        // Perform a POST request
-        mockMvc.perform(post("/employees/save")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(mockEmployeeToSave)))
-                .andExpect(status().isCreated());
+		// Perform
+		mockMvc.perform(post("/employees/save").contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(mockEmployeeToSave))).andExpect(status().isCreated());
 
-        // Verify 
-        verify(employeeService, times(1)).saveEmployee(any(Employee.class));
-    }
-	
-	
+		// Verify
+		verify(employeeService, times(1)).saveEmployee(any(Employee.class));
+	}
+
 	@Test
-    void saveEmployee_withValidationErrors() throws Exception 
-	{
-        // Create a mock employee with validation errors
-        Employee mockEmployeeToSave = new Employee(1, null, null, null);
+	void saveEmployee_withValidationErrors() throws Exception {
+		// Create
+		Employee mockEmployeeToSave = new Employee(1, null, null, null);
 
-        // Mock BindingResult with errors
-        BindingResult bindingResult = mock(BindingResult.class);
-        when(bindingResult.hasErrors()).thenReturn(true);
-        when(bindingResult.getAllErrors()).thenReturn(List.of(new ObjectError("employee", "Field cannot be null")));
+		// Mock
+		BindingResult bindingResult = mock(BindingResult.class);
+		when(bindingResult.hasErrors()).thenReturn(true);
+		when(bindingResult.getAllErrors()).thenReturn(List.of(new ObjectError("employee", "Field cannot be null")));
 
-        // POST request
-        mockMvc.perform(post("/employees/save").contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(mockEmployeeToSave))).andExpect(status().isBadRequest());
+		// Perform
+		mockMvc.perform(post("/employees/save").contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(mockEmployeeToSave))).andExpect(status().isBadRequest());
 
-        // Verify 
-        verify(employeeService, never()).saveEmployee(any(Employee.class));
-    }
-	
-	
+		// Verify
+		verify(employeeService, never()).saveEmployee(any(Employee.class));
+	}
+
 	@Test
-    void getAllEmployees() throws Exception 
-    {
-    	
-    	List<Employee> employee = new ArrayList<>();
-    	employee.add(new Employee(1, "test1", "lastname1", null));
-    	employee.add(new Employee(2, "test2", "lastname2", null));
-    	
-        // Mock
-        when(employeeService.getAllEmployee()).thenReturn(employee);
+	void getAllEmployees() throws Exception {
+		// Create
+		List<Employee> employee = new ArrayList<>();
+		employee.add(new Employee(1, "test1", "lastname1", null));
+		employee.add(new Employee(2, "test2", "lastname2", null));
 
-        // Perform GET request and assertions
-        mockMvc.perform(MockMvcRequestBuilders.get("/employees/getAll")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").exists());
-    }
+		// Mock
+		when(employeeService.getAllEmployee()).thenReturn(employee);
+
+		// Perform
+		mockMvc.perform(MockMvcRequestBuilders.get("/employees/getAll").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].id").exists());
+	}
+
+	@Test
+	void getEmployeeById() throws Exception {
+		// Create
+		Employee mockEmployee = new Employee(1, "test1", "lastname1", null);
+		when(employeeService.getEmployeeById(1)).thenReturn(Optional.of(mockEmployee));
+
+		// Perform
+		mockMvc.perform(MockMvcRequestBuilders.get("/employees/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("test1"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("lastname1"));
+
+		// Verify
+		verify(employeeService, times(1)).getEmployeeById(1);
+	}
+
+	@Test
+	void getEmployeeById_NonExisting() throws Exception {
+		// Create
+		when(employeeService.getEmployeeById(1)).thenReturn(Optional.empty());
+
+		// Perform
+		mockMvc.perform(MockMvcRequestBuilders.get("/employees/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isNotFound())
+				.andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
+
+		// Verify
+		verify(employeeService, times(1)).getEmployeeById(1);
+	}
+
+	@Test
+	void getEmployeesByDepartmentId() throws Exception {
+		// Create
+		List<Employee> employee = new ArrayList<>();
+		employee.add(new Employee(1, "test1", "lastname1", null));
+		employee.add(new Employee(2, "test2", "lastname2", null));
+
+		// Mock
+		when(employeeService.getEmployeesByDepartmentId(1)).thenReturn(employee);
+
+		mockMvc.perform(
+				MockMvcRequestBuilders.get("/employees/department/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName").value("test1"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[0].lastName").value("lastname1"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[1].firstName").value("test2"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$[1].lastName").value("lastname2"));
+
+		// Verify
+		verify(employeeService, times(1)).getEmployeesByDepartmentId(1);
+	}
+
+	@Test
+	void deleteEmployeeById() throws Exception {
+		int employeeId = 1;
+
+		mockMvc.perform(MockMvcRequestBuilders.delete("/employees/delete/{id}", employeeId)
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk());
+
+		verify(employeeService, times(1)).deleteEmployeeById(employeeId);
+	}
+
+	
+
 }

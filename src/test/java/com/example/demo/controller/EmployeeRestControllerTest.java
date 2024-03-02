@@ -46,7 +46,7 @@ class EmployeeRestControllerTest {
 	}
 
 	@Test
-	void saveEmployee() throws Exception {
+	void saveEmployee_200() throws Exception {
 		// Create
 		Employee mockEmployeeToSave = new Employee(1, "test1", "lastname1", null);
 		Employee mockSavedEmployee = new Employee(2, "test2", "lastname2", null);
@@ -55,7 +55,7 @@ class EmployeeRestControllerTest {
 		when(employeeService.saveEmployee(any(Employee.class))).thenReturn(mockSavedEmployee);
 
 		// Perform
-		mockMvc.perform(post("/employees/save").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post("/api/employees/save").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(mockEmployeeToSave))).andExpect(status().isCreated());
 
 		// Verify
@@ -63,7 +63,7 @@ class EmployeeRestControllerTest {
 	}
 
 	@Test
-	void saveEmployee_withValidationErrors() throws Exception {
+	void saveEmployee_400() throws Exception {
 		// Create
 		Employee mockEmployeeToSave = new Employee(1, null, null, null);
 
@@ -73,7 +73,7 @@ class EmployeeRestControllerTest {
 		when(bindingResult.getAllErrors()).thenReturn(List.of(new ObjectError("employee", "Field cannot be null")));
 
 		// Perform
-		mockMvc.perform(post("/employees/save").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post("/api/employees/save").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(mockEmployeeToSave))).andExpect(status().isBadRequest());
 
 		// Verify
@@ -91,19 +91,19 @@ class EmployeeRestControllerTest {
 		when(employeeService.getAllEmployee()).thenReturn(employee);
 
 		// Perform
-		mockMvc.perform(MockMvcRequestBuilders.get("/employees/getAll").contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/employees/getAll").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].id").exists());
 	}
 
 	@Test
-	void getEmployeeById() throws Exception {
+	void getEmployeeById_200() throws Exception {
 		// Create
 		Employee mockEmployee = new Employee(1, "test1", "lastname1", null);
 		when(employeeService.getEmployeeById(1)).thenReturn(Optional.of(mockEmployee));
 
 		// Perform
-		mockMvc.perform(MockMvcRequestBuilders.get("/employees/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/employees/{id}", 1).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("test1"))
@@ -114,12 +114,12 @@ class EmployeeRestControllerTest {
 	}
 
 	@Test
-	void getEmployeeById_NonExisting() throws Exception {
+	void getEmployeeById_400() throws Exception {
 		// Create
 		when(employeeService.getEmployeeById(1)).thenReturn(Optional.empty());
 
 		// Perform
-		mockMvc.perform(MockMvcRequestBuilders.get("/employees/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/employees/{id}", 1).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isNotFound())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
 
@@ -138,7 +138,7 @@ class EmployeeRestControllerTest {
 		when(employeeService.getEmployeesByDepartmentId(1)).thenReturn(employee);
 
 		mockMvc.perform(
-				MockMvcRequestBuilders.get("/employees/department/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+				MockMvcRequestBuilders.get("/api/employees/department/{id}", 1).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName").value("test1"))
@@ -155,7 +155,7 @@ class EmployeeRestControllerTest {
 	void deleteEmployeeById() throws Exception {
 		int employeeId = 1;
 
-		mockMvc.perform(MockMvcRequestBuilders.delete("/employees/delete/{id}", employeeId)
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/employees/delete/{id}", employeeId)
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk());
 
 		verify(employeeService, times(1)).deleteEmployeeById(employeeId);

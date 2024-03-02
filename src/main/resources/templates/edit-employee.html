@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Employee</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+
+</head>
+<body>
+
+
+<div th:replace="navbar.html"></div>
+    <h1>Edit Employee</h1>
+    <form th:action="@{/employees/edit/{id}(id=${employee.id})}" th:object="${employee}" method="post">
+        <input type="hidden" th:field="*{id}" />
+        First Name: <input type="text" th:field="*{firstName}" />
+        Last Name: <input type="text" th:field="*{lastName}" />
+        Department: <!-- You can provide a dropdown or some input fields here to select department -->
+        <input type="submit" value="Update" />
+    </form>
+</body>
+</html>

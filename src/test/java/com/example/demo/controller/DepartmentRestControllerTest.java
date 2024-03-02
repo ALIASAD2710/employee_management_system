@@ -47,9 +47,9 @@ class DepartmentRestControllerTest {
 	}
 
 	@Test
-	void saveDepartment() throws Exception {
+	void saveDepartment_200() throws Exception {
 
-		// Create a mock department to be saved
+		// Create
 		Department mockdepartmentToSave = new Department(1, "HR", null);
 		Department mockSaveddepartment = new Department(2, "Sales", null);
 
@@ -57,7 +57,7 @@ class DepartmentRestControllerTest {
 		when(departmentService.saveDepartment(any(Department.class))).thenReturn(mockSaveddepartment);
 
 		// Perform a POST request
-		mockMvc.perform(post("/department/save").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post("/api/department/save").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(mockdepartmentToSave))).andExpect(status().isCreated());
 
 		// Verify
@@ -65,17 +65,17 @@ class DepartmentRestControllerTest {
 	}
 
 	@Test
-	void saveDepartment_withValidationErrors() throws Exception {
-		// Create a mock department with validation errors
+	void saveDepartment_400() throws Exception {
+		// Create
 		Department mockdepartmentToSave = new Department(1, null, null);
 
-		// Mock BindingResult with errors
+		
 		BindingResult bindingResult = mock(BindingResult.class);
 		when(bindingResult.hasErrors()).thenReturn(true);
 		when(bindingResult.getAllErrors()).thenReturn(List.of(new ObjectError("department", "Field cannot be null")));
 
 		// POST request
-		mockMvc.perform(post("/department/save").contentType(MediaType.APPLICATION_JSON)
+		mockMvc.perform(post("/api/department/save").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(mockdepartmentToSave)))
 				.andExpect(status().isBadRequest());
 
@@ -94,20 +94,20 @@ class DepartmentRestControllerTest {
 		when(departmentService.getAllDepartments()).thenReturn(department);
 
 		// Perform GET request and assertions
-		mockMvc.perform(MockMvcRequestBuilders.get("/department/getAll").contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/department/getAll").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].id").exists());
 	}
 
 	@Test
-	void getDepartmentById() throws Exception {
+	void getDepartmentById_200() throws Exception {
 		// Create
 		Department mockdepartmentToSave = new Department(1, "HR", new ArrayList<>());
 
 		// Mock
 		when(departmentService.getDepartmentById(1)).thenReturn(Optional.of(mockdepartmentToSave));
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/department/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/department/{id}", 1).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.name").value("HR"))
@@ -118,12 +118,12 @@ class DepartmentRestControllerTest {
 	}
 
 	@Test
-	void getDepartmentById_NonExist() throws Exception {
+	void getDepartmentById_400() throws Exception {
 
 		// Mock
 		when(departmentService.getDepartmentById(1)).thenReturn(Optional.empty());
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/department/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/department/{id}", 1).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isNotFound())
 				.andExpect(MockMvcResultMatchers.jsonPath("$").doesNotExist());
 
@@ -137,7 +137,7 @@ class DepartmentRestControllerTest {
 		int id = 1;
 
 		mockMvc.perform(
-				MockMvcRequestBuilders.delete("/department/delete/{id}", id).contentType(MediaType.APPLICATION_JSON))
+				MockMvcRequestBuilders.delete("/api/department/delete/{id}", id).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk());
 
 		verify(departmentService, times(1)).deleteDepartmentById(id);

@@ -16,7 +16,7 @@ import com.example.demo.service.DepartmentService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/department")
+@RequestMapping("/api/department")
 public class DepartmentController 
 {
 	

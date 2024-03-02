@@ -26,7 +26,7 @@ import com.example.demo.service.DepartmentService;
 import com.example.demo.service.EmployeeService;
 
 @SpringBootTest
-public class EmployeeWebControllerTest {
+class EmployeeWebControllerTest {
 
 	@Mock
 	private EmployeeService employeeService;
@@ -38,7 +38,7 @@ public class EmployeeWebControllerTest {
 	private EmployeeWebController employeeWebController;
 
 	@Test
-	public void getAllEmployees() throws Exception {
+	void getAllEmployees() throws Exception {
 		// Create
 		Employee employee1 = new Employee(1, "test1", "lastname1", null);
 		Employee employee2 = new Employee(2, "test2", "lastname2", null);
@@ -54,7 +54,7 @@ public class EmployeeWebControllerTest {
 
 
 	@Test
-	public void showAddEmployeeForm() throws Exception {
+	void showAddEmployeeForm() throws Exception {
 		// Create
 	    Department department1 = new Department(1, "Sales", null);
 	    Department department2 = new Department(2, "Hr", null);
@@ -70,7 +70,7 @@ public class EmployeeWebControllerTest {
 	}
 
 	@Test
-	public void addEmployee() throws Exception {
+	void addEmployee() throws Exception {
 		// Create
 		Employee employee = new Employee(1, "test1", "lastname1", null);
 
@@ -85,7 +85,7 @@ public class EmployeeWebControllerTest {
 	}
 
 	@Test
-	public void showEditEmployeeForm() throws Exception {
+	void showEditEmployeeForm() throws Exception {
 		// Create
 		Employee employee = new Employee(1, "test1", "lastname1", null);
 		when(employeeService.getEmployeeById(1)).thenReturn(Optional.of(employee));
@@ -99,7 +99,7 @@ public class EmployeeWebControllerTest {
 	}
 
 	@Test
-	public void editEmployee() throws Exception {
+	void editEmployee() throws Exception {
 		// Create
 		Employee employee = new Employee(1, "test1", "lastname1", null);
 
@@ -114,7 +114,7 @@ public class EmployeeWebControllerTest {
 	}
 
 	@Test
-	public void deleteEmployee() throws Exception {
+	void deleteEmployee() throws Exception {
 
 		MockMvc mockMvc = MockMvcBuilders.standaloneSetup(employeeWebController).build();
 

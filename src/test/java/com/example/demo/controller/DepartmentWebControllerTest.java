@@ -25,7 +25,7 @@ import com.example.demo.service.DepartmentService;
 
 
 @SpringBootTest
-public class DepartmentWebControllerTest 
+class DepartmentWebControllerTest 
 {
 	
 	@Mock
@@ -35,7 +35,7 @@ public class DepartmentWebControllerTest
     private DepartmentWebController departmentWebController;
 
     @Test
-    public void showAllDepartments() throws Exception {
+    void showAllDepartments() throws Exception {
     	// Create
         Department department1 = new Department(1, "HR", null);
         Department department2 = new Department(2, "Sales", null);
@@ -51,7 +51,7 @@ public class DepartmentWebControllerTest
     }
 	
 	@Test
-    public void showAddDepartmentForm() throws Exception {       
+    void showAddDepartmentForm() throws Exception {       
        
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(departmentWebController).build();
 
@@ -63,7 +63,7 @@ public class DepartmentWebControllerTest
     }
 	
 	@Test
-    public void addDepartment() throws Exception {
+    void addDepartment() throws Exception {
 		// Create
         Department department = new Department(1, "HR", null);
         
@@ -81,7 +81,7 @@ public class DepartmentWebControllerTest
 	
 	
 	@Test
-    public void showEditDepartmentForm() throws Exception {
+    void showEditDepartmentForm() throws Exception {
 		// Create
         Department department = new Department(1, "HR", null);
         when(departmentService.getDepartmentById(1)).thenReturn(Optional.of(department));
@@ -98,7 +98,7 @@ public class DepartmentWebControllerTest
 	
 	
 	@Test
-    public void editDepartment() throws Exception {
+    void editDepartment() throws Exception {
         // Create department object
         Department department = new Department();
         department.setId(1);
@@ -118,7 +118,7 @@ public class DepartmentWebControllerTest
     }
 	
 	@Test
-    public void deleteDepartment() throws Exception {
+    void deleteDepartment() throws Exception {
         
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(departmentWebController).build();
 

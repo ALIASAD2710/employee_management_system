@@ -10,13 +10,15 @@ import com.example.demo.service.DepartmentService;
 
 @Controller
 @RequestMapping("/departments")
-public class DepartmentWebController {
+class DepartmentWebController {
 
 	private final DepartmentService departmentService;
 
 	public DepartmentWebController(DepartmentService departmentService) {
 		this.departmentService = departmentService;
 	}
+	
+	private static final String REDIRECT_TO_DEPARTMENTS = "redirect:/departments/";
 
 	@GetMapping("/")
 	public String showAllDepartments(Model model) {
@@ -33,7 +35,7 @@ public class DepartmentWebController {
 	@PostMapping("/add")
 	public String addDepartment(@ModelAttribute("department") Department department) {
 		departmentService.saveDepartment(department);
-		return "redirect:/departments/";
+		return REDIRECT_TO_DEPARTMENTS;
 	}
 
 	@GetMapping("/edit/{id}")
@@ -47,13 +49,13 @@ public class DepartmentWebController {
 	public String editDepartment(@PathVariable("id") int id, @ModelAttribute("department") Department department) {
 		department.setId(id);
 		departmentService.saveDepartment(department);
-		return "redirect:/departments/";
+		return REDIRECT_TO_DEPARTMENTS;
 	}
 
 	@GetMapping("/delete/{id}")
 	public String deleteDepartment(@PathVariable("id") int id) {
 		departmentService.deleteDepartmentById(id);
-		return "redirect:/departments/";
+		return REDIRECT_TO_DEPARTMENTS;
 	}
 
 }

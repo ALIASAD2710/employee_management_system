@@ -20,6 +20,8 @@ public class EmployeeWebController {
         this.employeeService = employeeService;
         this.departmentService = departmentService;
     }
+	
+	private static final String REDIRECT_TO_EMPLOYEES = "redirect:/employees/";
 
 	@GetMapping("/")
 	public String getAllEmployees(Model model) {
@@ -37,7 +39,7 @@ public class EmployeeWebController {
 	@PostMapping("/add")
 	public String addEmployee(@ModelAttribute("employee") Employee employee) {
 		employeeService.saveEmployee(employee);
-		return "redirect:/employees/";
+		return REDIRECT_TO_EMPLOYEES;
 	}
 
 	@GetMapping("/edit/{id}")
@@ -51,13 +53,13 @@ public class EmployeeWebController {
 	public String editEmployee(@PathVariable("id") int id, @ModelAttribute("employee") Employee employee) {
 		employee.setId(id);
 		employeeService.saveEmployee(employee);
-		return "redirect:/employees/";
+		return REDIRECT_TO_EMPLOYEES;
 	}
 
 	@GetMapping("/delete/{id}")
 	public String deleteEmployee(@PathVariable("id") int id) {
 		employeeService.deleteEmployeeById(id);
-		return "redirect:/employees/";
+		return REDIRECT_TO_EMPLOYEES;
 	}
 
 }

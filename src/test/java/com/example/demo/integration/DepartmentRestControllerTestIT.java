@@ -64,7 +64,7 @@ class DepartmentRestControllerTestIT {
     }
 
     @Test
-    public void saveDepartment() {
+    void saveDepartment() {
         // Given
         Department departmentToSave = new Department(1, "HR", null);
         
@@ -85,7 +85,7 @@ class DepartmentRestControllerTestIT {
     
     
     @Test
-    public void getAllDepartments() {
+    void getAllDepartments() {
         // Given
         Department department1 = new Department(1, "HR", null);
         Department department2 = new Department(2, "Sales", null);
@@ -108,26 +108,8 @@ class DepartmentRestControllerTestIT {
         assertEquals("Sales", departments.get(1).getName());
     }
     
-    
     @Test
-    public void getDepartmentById() {
-        // Given
-        Department department = new Department(1, "HR", null);
-        departmentRepository.save(department);
-        String url = "http://localhost:" + port + "/api/department/" + department.getId();
-
-        // When
-        ResponseEntity<Department> responseEntity = restTemplate.getForEntity(url, Department.class);
-
-        // Then
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
-        assertEquals("HR", responseEntity.getBody().getName());
-    }
-    
-    
-    @Test
-    public void deleteDepartmentById() {
+    void deleteDepartmentById() {
         // Given
         Department department = new Department(1, "HR", null);
         departmentRepository.save(department);

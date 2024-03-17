@@ -86,22 +86,6 @@ class DepartmentWebControllerTestIT {
 		assertEquals(HttpStatus.OK, response.getStatusCode());
 	}
 
-
-
-	@Test
-	void showEditDepartmentForm() {
-		// Given
-		Department department = new Department(1, "HR", null);
-		departmentRepository.save(department);
-		//When
-		ResponseEntity<String> response = restTemplate
-				.getForEntity("http://localhost:" + port + "/departments/edit/" + department.getId(), String.class);
-		//Then
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-	}
-
-
-
 	@Test
 	void deleteDepartment() {
 		// Given

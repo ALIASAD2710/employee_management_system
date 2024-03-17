@@ -3,11 +3,10 @@
 <head>
     <title>Add Department</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
-
 </head>
 <body>
 
-<div th:replace="navbar.html"></div>
+<div th:replace="~{navbar.html}"></div>
     <h1>Add Department</h1>
     <form th:action="@{/departments/add}" th:object="${department}" method="post">
         Name: <input type="text" th:field="*{name}" />

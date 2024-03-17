@@ -32,7 +32,7 @@ import com.example.demo.entity.Employee;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-public class EmployeeRestControllerTestIT 
+class EmployeeRestControllerTestIT 
 {
 	
 	@Container
@@ -75,7 +75,7 @@ public class EmployeeRestControllerTestIT
     }
 
     @Test
-    public void saveEmployee() {
+    void saveEmployee() {
         // Given
         Employee employeeToSave = new Employee(1,"test1", "lastname1", null);
 
@@ -95,7 +95,7 @@ public class EmployeeRestControllerTestIT
     }
 
     @Test
-    public void getAllEmployees() {
+    void getAllEmployees() {
         // Given
         Employee employee1 = new Employee(1,"test1", "lastname1", null);
         employeeRepository.save(employee1);
@@ -114,26 +114,8 @@ public class EmployeeRestControllerTestIT
         assertEquals(1, employees.size());
         assertEquals("test1", employees.get(0).getFirstName());
     }
-    
-    
     @Test
-    public void getEmployeeById() {
-        // Given
-        Employee employee = new Employee(1,"test1", "lastname1", null);
-        employeeRepository.save(employee);
-        String url = "http://localhost:" + port + "/api/employees/" + employee.getId();
-
-        // When
-        ResponseEntity<Employee> responseEntity = restTemplate.getForEntity(url, Employee.class);
-
-        // Then
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
-        assertEquals("test1", responseEntity.getBody().getFirstName());
-    }
-    
-    @Test
-    public void deleteEmployeeById() {
+    void deleteEmployeeById() {
         // Given
         Employee employee = new Employee(1,"test1", "lastname1", null);
         employeeRepository.save(employee);

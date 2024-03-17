@@ -10,7 +10,7 @@
 <div th:replace="navbar.html"></div>
     <h1>Add Department</h1>
     <form th:action="@{/departments/add}" th:object="${department}" method="post">
-        Name: <input type="text" th:field="*{name}" required />
+        Name: <input type="text" th:field="*{name}" />
         <input type="submit" value="Submit" />
     </form>
 </body>

@@ -20,13 +20,11 @@
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<sonar.coverage.exclusions>
 			**/EmployeeManagementSystemApplication.*,
-			**/entity/*.*,
-			**/dto/*.*
+			**/entity/*.*
 		</sonar.coverage.exclusions>
 		<sonar.exclusions>
 			**/EmployeeManagementSystemApplication.*,
-			**/entity/*.*,
-			**/dto/*.*
+			**/entity/*.*
 		</sonar.exclusions>
 	</properties>
 	<dependencies>
@@ -170,7 +168,6 @@
 					<excludes>
 						<exclude>**/EmployeeManagementSystemApplication.*</exclude>
 						<exclude>**/entity/*.*</exclude>
-						<exclude>**/dto/*.*</exclude>
 					</excludes>
 				</configuration>
 				<executions>

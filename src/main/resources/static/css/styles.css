@@ -94,5 +94,5 @@ form input[type="submit"]:hover {
 
 
 .select-container:hover select {
-    border-color: #888; /* Border color on hover */
+    border-color: #888; 
 }

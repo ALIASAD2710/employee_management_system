@@ -69,7 +69,7 @@ class EmployeeRestControllerTest {
 
 		// Mock
 		BindingResult bindingResult = mock(BindingResult.class);
-		when(bindingResult.hasErrors()).thenReturn(true);
+		when(bindingResult.hasErrors()).thenReturn(false);
 		when(bindingResult.getAllErrors()).thenReturn(List.of(new ObjectError("employee", "Field cannot be null")));
 
 		// Perform

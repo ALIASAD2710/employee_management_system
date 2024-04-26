@@ -72,7 +72,7 @@ class EmployeeServiceTest {
     @Test
     void getEmployeeById() {
     	// Create
-        Employee mockEmployee = new Employee(1, "John", "Doe", null);
+        Employee mockEmployee = new Employee(1, "test1", "lastname1", null);
         when(employeeRepository.findById(1)).thenReturn(Optional.of(mockEmployee));
 
         

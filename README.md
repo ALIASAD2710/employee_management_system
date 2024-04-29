@@ -33,9 +33,9 @@ GitHub Actions [![Java CI with Maven](https://github.com/ALIASAD2710/employee_ma
 <li><strong>GET localhost:5566/api/employees/{id}</strong>: Retrieves a specific Employee by ID.</li>
 <li><strong>Delete localhost:5566/api/employees/delete/{id}</strong>: Delete Employee by ID.</li>
 <li><strong>POST localhost:5566/api/department/save</strong>: Creates a new Department.</li>
-<li><strong>GETlocalhost:5566/api/department/getAll</strong>: Retrieves all Department.</li>
-<li><strong>GETlocalhost:5566/api/department/{id}</strong>: Retrieves a specific Department by ID.</li>
-<li><strong>Deletelocalhost:5566/api/department/delete/{id}</strong>: Delete Department by ID.</li>
+<li><strong>GET localhost:5566/api/department/getAll</strong>: Retrieves all Department.</li>
+<li><strong>GET localhost:5566/api/department/{id}</strong>: Retrieves a specific Department by ID.</li>
+<li><strong>Delete localhost:5566/api/department/delete/{id}</strong>: Delete Department by ID.</li>
 </ul>
 
 

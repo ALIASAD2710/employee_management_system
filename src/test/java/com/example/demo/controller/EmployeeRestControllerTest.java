@@ -127,29 +127,29 @@ class EmployeeRestControllerTest {
 		verify(employeeService, times(1)).getEmployeeById(1);
 	}
 
-	@Test
-	void getEmployeesByDepartmentId() throws Exception {
-		// Create
-		List<Employee> employee = new ArrayList<>();
-		employee.add(new Employee(1, "test1", "lastname1", null));
-		employee.add(new Employee(2, "test2", "lastname2", null));
-
-		// Mock
-		when(employeeService.getEmployeesByDepartmentId(1)).thenReturn(employee);
-
-		mockMvc.perform(
-				MockMvcRequestBuilders.get("/api/employees/department/{id}", 1).contentType(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName").value("test1"))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[0].lastName").value("lastname1"))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[1].firstName").value("test2"))
-				.andExpect(MockMvcResultMatchers.jsonPath("$[1].lastName").value("lastname2"));
-
-		// Verify
-		verify(employeeService, times(1)).getEmployeesByDepartmentId(1);
-	}
+//	@Test
+//	void getEmployeesByDepartmentId() throws Exception {
+//		// Create
+//		List<Employee> employee = new ArrayList<>();
+//		employee.add(new Employee(1, "test1", "lastname1", null));
+//		employee.add(new Employee(2, "test2", "lastname2", null));
+//
+//		// Mock
+//		when(employeeService.getEmployeesByDepartmentId(1)).thenReturn(employee);
+//
+//		mockMvc.perform(
+//				MockMvcRequestBuilders.get("/api/employees/department/{id}", 1).contentType(MediaType.APPLICATION_JSON))
+//				.andExpect(MockMvcResultMatchers.status().isOk())
+//				.andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1))
+//				.andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName").value("test1"))
+//				.andExpect(MockMvcResultMatchers.jsonPath("$[0].lastName").value("lastname1"))
+//				.andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2))
+//				.andExpect(MockMvcResultMatchers.jsonPath("$[1].firstName").value("test2"))
+//				.andExpect(MockMvcResultMatchers.jsonPath("$[1].lastName").value("lastname2"));
+//
+//		// Verify
+//		verify(employeeService, times(1)).getEmployeesByDepartmentId(1);
+//	}
 
 	@Test
 	void deleteEmployeeById() throws Exception {

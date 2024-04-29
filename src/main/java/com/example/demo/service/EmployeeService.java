@@ -29,9 +29,6 @@ public class EmployeeService {
 		return employeeRepository.findById(id);
 	}
 
-	public List<Employee> getEmployeesByDepartmentId(int departmentId) {
-		return employeeRepository.findByDepartmentId(departmentId);
-	}
 
 	public void deleteEmployeeById(int id) {
 		employeeRepository.deleteById(id);

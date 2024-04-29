@@ -85,30 +85,7 @@ class EmployeeServiceTest {
     }
     
     
-    @Test
-    void getEmployeesByDepartmentId() {
-        // Create
-        int departmentId = 1;
-        List<Employee> mockEmployees = new ArrayList<>();
-        mockEmployees.add(new Employee(1, "Test1", "Lastname1", null));
-        mockEmployees.add(new Employee(2, "Test2", "Lastname2", null));
 
-        // Mock
-        when(employeeRepository.findByDepartmentId(departmentId)).thenReturn(mockEmployees);
-
-        
-        List<Employee> result = employeeService.getEmployeesByDepartmentId(departmentId);
-
-        
-        assertEquals(mockEmployees.size(), result.size());
-        for (int i = 0; i < mockEmployees.size(); i++) {
-            assertEquals(mockEmployees.get(i), result.get(i));
-        }
-
-        // Verify
-        verify(employeeRepository, times(1)).findByDepartmentId(departmentId);
-    }
-    
     
     @Test
     void deleteEmployeeById() {

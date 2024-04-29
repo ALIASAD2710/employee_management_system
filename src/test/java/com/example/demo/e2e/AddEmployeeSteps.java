@@ -31,8 +31,8 @@ public class AddEmployeeSteps {
         System.out.println("Clicking the Add Employee button");
     }
 
-    @Then("I should see a success message")
-    public void i_should_see_a_success_message() {
+    @Then("I should see add employee success message")
+    public void i_should_see_add_employee_success_message() {
         System.out.println("Verifying the success message");
     }
 }

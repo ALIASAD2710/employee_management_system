@@ -62,12 +62,6 @@ public class EmployeeController {
 		}
 	}
 
-	@GetMapping("/department/{id}")
-	public ResponseEntity<List<Employee>> getEmployeesByDepartmentId(@PathVariable int id) {
-		List<Employee> employee = employeeService.getEmployeesByDepartmentId(id);
-		return new ResponseEntity<>(employee, HttpStatus.OK);
-	}
-
 	@DeleteMapping("/delete/{id}")
 	public void deleteEmployeeById(@PathVariable int id) {
 		employeeService.deleteEmployeeById(id);

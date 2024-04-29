@@ -6,4 +6,4 @@ Feature: Add Employee
     And I enter the last name "Ali"
     And I select the department "IT"
     And I click the Add Employee button
-    Then I should see a success message
+    Then I should see add employee success message

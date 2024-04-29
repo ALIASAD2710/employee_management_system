@@ -12,7 +12,7 @@ GitHub Actions [![Java CI with Maven](https://github.com/ALIASAD2710/employee_ma
 <p>Employee Management System is a web application built using Java version 17, Maven, and Spring Boot. It provides a RESTful API for managing employees and a simple HTML frontend for interacting with the API.</p>
 
 <ol>
-  <li>Clone the repository: <code>git https://github.com/ALIASAD2710/employee_management_system.git</code></li>
+  <li>Clone the repository: <code>git clone https://github.com/ALIASAD2710/employee_management_system.git</code></li>
   <li>Import the project into Eclipse:
     <ul>
       <li>Open Eclipse and select <strong>File -> Import</strong>.</li>

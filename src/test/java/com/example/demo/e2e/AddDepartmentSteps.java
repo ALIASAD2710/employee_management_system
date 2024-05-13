@@ -1,28 +1,36 @@
 package com.example.demo.e2e;
 
+import static org.junit.Assert.assertNotNull;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.demo.controller.DepartmentWebController;
+import com.example.demo.entity.Department;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class AddDepartmentSteps {
 
-    @Given("I am on the department management page")
-    public void i_am_on_the_department_management_page() {
-    	System.out.println("Navigating to the add department page");
+    @Autowired
+    private DepartmentWebController departmentWebController;
+
+    private Department department;
+
+    @Given("I have a department with name {string}")
+    public void i_have_a_department_with_name(String departmentName) {
+        department = new Department();
+        department.setName(departmentName);
     }
 
-    @When("I enter the department name {string}")
-    public void i_enter_the_department_name(String departmentName) {
-    	System.out.println("Entering the first name: " + departmentName);
+    @When("I add the department")
+    public void i_add_the_department() {
+    	departmentWebController.addDepartment(department);
     }
 
-    @When("I click the Add Department button")
-    public void i_click_the_Add_Department_button() {
-    	System.out.println("Clicking the Add Department button");
-    }
-
-    @Then("I should see add department success message")
-    public void i_should_see_add_department_success_message() {
-    	System.out.println("Verifying the success message");
+    @Then("The department should be added successfully")
+    public void the_department_should_be_added_successfully() {
+        assertNotNull(department.getId());
     }
 }

@@ -1,39 +1,38 @@
 package com.example.demo.e2e;
 
+import static org.junit.Assert.assertNotNull;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.demo.controller.EmployeeWebController;
+import com.example.demo.entity.Employee;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class AddEmployeeSteps {
 
-    @Given("I am on the employee management page")
-    public void i_am_on_the_employee_management_page() {
-        System.out.println("Navigating to the employee management page");
+    @Autowired
+    private EmployeeWebController employeeWebController;
+
+    private Employee employee;
+
+    @Given("I have an employee with name {string} and last name {string}")
+    public void i_have_an_employee_with_name_and_last_name(String firstName, String lastName) {
+        employee = new Employee();
+        employee.setFirstName(firstName);
+        employee.setLastName(lastName);
     }
 
-    @When("I enter the first name {string}")
-    public void i_enter_the_first_name(String firstName) {
-        System.out.println("Entering the first name: " + firstName);
+    @When("I add the employee")
+    public void i_add_the_employee() {
+        employeeWebController.addEmployee(employee);
     }
 
-    @When("I enter the last name {string}")
-    public void i_enter_the_last_name(String lastName) {
-        System.out.println("Entering the last name: " + lastName);
-    }
-
-    @When("I select the department {string}")
-    public void i_select_the_department(String department) {
-        System.out.println("Selecting the department: " + department);
-    }
-
-    @When("I click the Add Employee button")
-    public void i_click_the_Add_Employee_button() {
-        System.out.println("Clicking the Add Employee button");
-    }
-
-    @Then("I should see add employee success message")
-    public void i_should_see_add_employee_success_message() {
-        System.out.println("Verifying the success message");
+    @Then("The employee should be added successfully")
+    public void the_employee_should_be_added_successfully() {
+        assertNotNull(employee.getId());
     }
 }
 

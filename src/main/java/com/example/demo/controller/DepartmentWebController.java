@@ -10,7 +10,7 @@ import com.example.demo.service.DepartmentService;
 
 @Controller
 @RequestMapping("/departments")
-class DepartmentWebController {
+public class DepartmentWebController {
 
 	private final DepartmentService departmentService;
 

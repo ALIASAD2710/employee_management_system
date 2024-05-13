@@ -1,6 +1,6 @@
 package com.example.demo.e2e;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,7 +32,7 @@ public class AddEmployeeSteps {
 
     @Then("The employee should be added successfully")
     public void the_employee_should_be_added_successfully() {
-        assertNotNull(employee.getId());
+        assertNotNull(employee.getId(), "Employee ID should not be null");
     }
 }
 

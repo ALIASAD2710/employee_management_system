@@ -49,7 +49,9 @@ public class DepartmentWebControllerE2E {
     @BeforeAll
     static void beforeAll() {
         mysql.start();
-        driver = new ChromeDriver();
+       	ChromeOptions options = new ChromeOptions();
+    	options.addArguments("--headless"); 
+    	driver = new ChromeDriver(options);
     }
 
     @AfterAll

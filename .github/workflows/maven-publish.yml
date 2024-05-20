@@ -35,19 +35,19 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
           restore-keys: ${{ runner.os }}-m2-
 
-      - name: Install Chrome
+      - name: Install specific Chrome version
         run: |
           sudo apt-get update
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
           sudo apt-mark hold google-chrome-stable
 
-      - name: Install ChromeDriver
+      - name: Install specific ChromeDriver version
         run: |
           wget -N https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.60/linux64/chromedriver-linux64.zip
-          unzip chromedriver_linux64.zip
+          unzip chromedriver-linux64.zip
           sudo mv chromedriver /usr/local/bin/
-          rm chromedriver_linux64.zip
+          rm chromedriver-linux64.zip
 
       - name: Tests
         run: mvn verify -Pjacoco

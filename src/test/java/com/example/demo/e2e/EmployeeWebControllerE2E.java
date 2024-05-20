@@ -18,6 +18,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -49,7 +50,9 @@ public class EmployeeWebControllerE2E {
     @BeforeAll
     static void beforeAll() {
         mysql.start();
-        driver = new ChromeDriver();
+     	ChromeOptions options = new ChromeOptions();
+    	options.addArguments("--headless"); 
+    	driver = new ChromeDriver(options);
     }
 
     @AfterAll

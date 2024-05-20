@@ -203,7 +203,7 @@
 					<excludes>
 						<exclude>**/EmployeeManagementSystemApplication.*</exclude>
 						<exclude>**/entity/*.*</exclude>
-						<exclude>**/htmlunit/*</exclude>
+						<exclude>org/openqa/selenium/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>

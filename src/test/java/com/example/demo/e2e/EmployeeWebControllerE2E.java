@@ -11,7 +11,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.testcontainers.containers.MySQLContainer;
@@ -35,21 +36,20 @@ public class EmployeeWebControllerE2E {
             .withReuse(true);
 
     private static WebDriver driver;
-
+    
     @BeforeClass
-    public static void setupClass() {
-
-        // setup Chrome Driver
-        WebDriverManager.chromedriver().setup();
-
-    }
-
+	public static void setupClass() 
+	{
+			
+		// setup Chrome Driver
+		WebDriverManager.chromedriver().setup();
+		
+	}
+    
     @BeforeAll
     static void beforeAll() {
         mysql.start();
-        WebDriverManager.chromedriver().browserVersion("125.0.6422.60").setup();
-        ChromeOptions options = new ChromeOptions();
-        driver = new ChromeDriver(options);
+        driver = new ChromeDriver();
     }
 
     @AfterAll
@@ -58,10 +58,13 @@ public class EmployeeWebControllerE2E {
         mysql.stop();
     }
 
+
     @Test
     void testAddEmployee() {
         driver.get("http://localhost:" + port + "/employees/");
-        driver.findElement(By.linkText("Add Employee")).click();
+        WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10L)); 
+        WebElement addEmployeeLink = wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Employee")));
+        addEmployeeLink.click();
         WebElement firstNameInput = driver.findElement(By.name("firstName"));
         firstNameInput.sendKeys("Asad");
         WebElement lastNameInput = driver.findElement(By.name("lastName"));

@@ -11,7 +11,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,11 +49,8 @@ public class DepartmentWebControllerE2E {
     @BeforeAll
     static void beforeAll() {
         mysql.start();
-        WebDriverManager.chromedriver().browserVersion("125.0.6422.60").setup();
-        ChromeOptions options = new ChromeOptions();
-        driver = new ChromeDriver(options);
+        driver = new ChromeDriver();
     }
-
 
     @AfterAll
     static void afterAll() {

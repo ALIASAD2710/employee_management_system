@@ -202,9 +202,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/EmployeeManagementSystemApplication.*</exclude>
-						<exclude>**/entity/*.*</exclude>
-						<exclude>**/htmlunit/*</exclude>
-						<exclude>com/gargoylesoftware/**</exclude>
+						<exclude>**/entity/*.*</exclude>						
 					</excludes>
 				</configuration>
 				<executions>

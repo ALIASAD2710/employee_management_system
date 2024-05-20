@@ -203,6 +203,7 @@
 					<excludes>
 						<exclude>**/EmployeeManagementSystemApplication.*</exclude>
 						<exclude>**/entity/*.*</exclude>
+						<exclude>**/htmlunit/*</exclude>
 					</excludes>
 				</configuration>
 				<executions>
@@ -240,7 +241,7 @@
 					</targetClasses>
 					<excludedTestClasses>
 						<param>com.example.demo.**IT</param>
-						<param>com.example.demo.e2e.TestRunnerE2E</param>
+						<param>com.example.demo.e2e.**E2E</param>
 
 					</excludedTestClasses>
 					<targetTests>

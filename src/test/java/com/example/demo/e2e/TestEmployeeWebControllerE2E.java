@@ -24,7 +24,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class DepartmentWebControllerE2E {
+public class TestEmployeeWebControllerE2E {
 
     @LocalServerPort
     private int port;
@@ -50,7 +50,7 @@ public class DepartmentWebControllerE2E {
     @BeforeAll
     static void beforeAll() {
         mysql.start();
-       	ChromeOptions options = new ChromeOptions();
+     	ChromeOptions options = new ChromeOptions();
     	options.addArguments("--headless"); 
     	driver = new ChromeDriver(options);
     }
@@ -63,36 +63,42 @@ public class DepartmentWebControllerE2E {
 
 
     @Test
-    void testAddDepartment() {
-        driver.get("http://localhost:" + port + "/departments/");
+    void testAddEmployee() {
+        driver.get("http://localhost:" + port + "/employees/");
         WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10L)); 
-        WebElement addDepartmentLink = wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Department")));
-        addDepartmentLink.click();
-        WebElement departmentNameInput = driver.findElement(By.name("name"));
-        departmentNameInput.sendKeys("HR");
-        departmentNameInput.submit();
-        assertTrue(driver.getPageSource().contains("HR"));
+        WebElement addEmployeeLink = wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Employee")));
+        addEmployeeLink.click();
+        WebElement firstNameInput = driver.findElement(By.name("firstName"));
+        firstNameInput.sendKeys("Asad");
+        WebElement lastNameInput = driver.findElement(By.name("lastName"));
+        lastNameInput.sendKeys("Ali");
+        WebElement departmentInput = driver.findElement(By.name("department"));
+        departmentInput.sendKeys(""); 
+        departmentInput.submit();
+        assertTrue(driver.getPageSource().contains("Asad"));
+        assertTrue(driver.getPageSource().contains("Ali"));
+        assertTrue(driver.getPageSource().contains(""));
     }
 
 
-
     @Test
-    void testEditDepartment() {
-        testAddDepartment();
-        WebElement addedDepartment = driver.findElement(By.xpath("//td[text()='HR']"));
-        addedDepartment.findElement(By.xpath("../td/a[text()='Edit']")).click();
-        WebElement editDepartmentNameInput = driver.findElement(By.name("name"));
-        editDepartmentNameInput.clear();
-        editDepartmentNameInput.sendKeys("IT");
-        editDepartmentNameInput.submit();
-        assertTrue(driver.getPageSource().contains("IT"));
+    void testEditEmployee() {
+        testAddEmployee();
+        WebElement addedEmployee = driver.findElement(By.xpath("//td[text()='Asad']"));
+        addedEmployee.findElement(By.xpath("../td/a[text()='Edit']")).click();
+        WebElement editLastNameInput = driver.findElement(By.name("lastName"));
+        editLastNameInput.clear();
+        editLastNameInput.sendKeys("Khan");
+        editLastNameInput.submit();
+        assertTrue(driver.getPageSource().contains("Asad"));
+        assertTrue(driver.getPageSource().contains("Khan"));
     }
 
     @Test
-    void testDeleteDepartment() {
-        testAddDepartment();
-        WebElement addedDepartment = driver.findElement(By.xpath("//td[text()='HR']"));
-        addedDepartment.findElement(By.xpath("../td/a[text()='Delete']")).click();
-        assertEquals(0, driver.findElements(By.xpath("//td[text()='HR']")).size());
+    void testDeleteEmployee() {
+        testAddEmployee();
+        WebElement addedEmployee = driver.findElement(By.xpath("//td[text()='Asad']"));
+        addedEmployee.findElement(By.xpath("../td/a[text()='Delete']")).click();
+        assertEquals(0, driver.findElements(By.xpath("//td[text()='Asad']")).size());
     }
 }

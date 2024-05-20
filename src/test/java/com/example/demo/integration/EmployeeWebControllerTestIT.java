@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.springframework.http.HttpHeaders;
+
 
 import com.example.demo.dao.DepartmentRepository;
 import com.example.demo.dao.EmployeeRepository;
@@ -105,17 +107,22 @@ class EmployeeWebControllerTestIT {
 
 	@Test
 	void deleteEmployee() {
-		// Given
-		Employee employee = new Employee(1, "test1", "lastname1", null);
-		employeeRepository.save(employee);
-		// When
-		String url = "http://localhost:" + port + "/employees/delete/" + employee.getId();
-		ResponseEntity<Void> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null, Void.class);
-		// Then
-		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-		Optional<Employee> deletedEmployee = employeeRepository.findById(employee.getId());
-		assertFalse(deletedEmployee.isPresent());
+	    // Given
+	    Employee employee = new Employee(1, "test1", "lastname1", null);
+	    employeeRepository.save(employee);	    
+	    // When
+	    String url = "http://localhost:" + port + "/employees/delete/" + employee.getId();
+	    ResponseEntity<Void> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null, Void.class);	   
+	    if (responseEntity.getStatusCode().is3xxRedirection()) {
+	        HttpHeaders headers = responseEntity.getHeaders();
+	        String redirectUrl = headers.getLocation().toString();
+	        responseEntity = restTemplate.exchange(redirectUrl, HttpMethod.GET, null, Void.class);
+	    }	    
+	    // Then
+	    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+	    Optional<Employee> deletedEmployee = employeeRepository.findById(employee.getId());
+	    assertFalse(deletedEmployee.isPresent());
 	}
+
 
 }

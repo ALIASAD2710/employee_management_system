@@ -23,7 +23,7 @@ public class Department {
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "department")
-    @JsonIgnoreProperties("department")
+    @JsonIgnoreProperties({"department", "hibernateLazyInitializer", "handler"})
     private List<Employee> employees;
 
 	

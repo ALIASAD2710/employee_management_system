@@ -26,7 +26,7 @@ public class Employee {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
-    @JsonIgnoreProperties("employees")
+    @JsonIgnoreProperties({"employees", "hibernateLazyInitializer", "handler"})
     private Department department;
 
 	

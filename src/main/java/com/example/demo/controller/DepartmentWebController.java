@@ -49,7 +49,7 @@ public class DepartmentWebController {
 	public String editDepartment(@PathVariable("id") int id, @ModelAttribute("department") Department department) {
 	    Department updatedDepartment = new Department(id, department.getName(), department.getEmployees());
 	    departmentService.saveDepartment(updatedDepartment);
-	    return "redirect:/departments/";
+	    return REDIRECT_TO_DEPARTMENTS;
 	}
 
 

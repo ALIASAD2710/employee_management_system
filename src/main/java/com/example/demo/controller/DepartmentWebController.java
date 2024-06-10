@@ -44,13 +44,14 @@ public class DepartmentWebController {
 		departmentOptional.ifPresent(department -> model.addAttribute("department", department));
 		return "edit-department";
 	}
-
+	
 	@PostMapping("/edit/{id}")
 	public String editDepartment(@PathVariable("id") int id, @ModelAttribute("department") Department department) {
-		department.setId(id);
-		departmentService.saveDepartment(department);
-		return REDIRECT_TO_DEPARTMENTS;
+	    Department updatedDepartment = new Department(id, department.getName(), department.getEmployees());
+	    departmentService.saveDepartment(updatedDepartment);
+	    return "redirect:/departments/";
 	}
+
 
 	@GetMapping("/delete/{id}")
 	public String deleteDepartment(@PathVariable("id") int id) {

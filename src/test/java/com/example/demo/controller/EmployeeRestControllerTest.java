@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.FieldError;
 
 import com.example.demo.entity.Employee;
 import com.example.demo.service.EmployeeService;
@@ -57,27 +58,47 @@ class EmployeeRestControllerTest {
 		// Perform
 		mockMvc.perform(post("/api/employees/save").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(mockEmployeeToSave))).andExpect(status().isCreated());
-
 		// Verify
 		verify(employeeService, times(1)).saveEmployee(any(Employee.class));
 	}
 
 	@Test
 	void saveEmployee_400() throws Exception {
-		// Create
+		// Create 
 		Employee mockEmployeeToSave = new Employee(1, null, null, null);
 
-		// Mock
+		// Mock 
 		BindingResult bindingResult = mock(BindingResult.class);
-		when(bindingResult.hasErrors()).thenReturn(false);
-		when(bindingResult.getAllErrors()).thenReturn(List.of(new ObjectError("employee", "Field cannot be null")));
+		when(bindingResult.hasErrors()).thenReturn(true);
+		when(bindingResult.getFieldErrors())
+				.thenReturn(List.of(new FieldError("employee", "firstName", "Please write your name"),
+						new FieldError("employee", "lastName", "Please write your last name")));
 
-		// Perform
+		// Perform the POST request 
 		mockMvc.perform(post("/api/employees/save").contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().writeValueAsString(mockEmployeeToSave))).andExpect(status().isBadRequest());
+				.content(new ObjectMapper().writeValueAsString(mockEmployeeToSave))).andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message").value("Validation errors"))
+				.andExpect(
+						jsonPath("$.details[?(@.field == 'firstName')].errorMessage").value("Please write your name"))
+				.andExpect(jsonPath("$.details[?(@.field == 'lastName')].errorMessage")
+						.value("Please write your last name"));
 
-		// Verify
+		// Verify 
 		verify(employeeService, never()).saveEmployee(any(Employee.class));
+	}
+
+	@Test
+	void saveEmployee_500() throws Exception {
+		// Create 
+		Employee mockEmployeeToSave = new Employee(1, "test1", "lastname1", null);
+		// Mock 
+		when(employeeService.saveEmployee(any(Employee.class))).thenThrow(new RuntimeException("Error"));
+		// Perform the POST request 
+		mockMvc.perform(post("/api/employees/save").contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(mockEmployeeToSave)))
+				.andExpect(status().isInternalServerError());
+		// Verify 
+		verify(employeeService, times(1)).saveEmployee(any(Employee.class));
 	}
 
 	@Test
@@ -90,7 +111,7 @@ class EmployeeRestControllerTest {
 		// Mock
 		when(employeeService.getAllEmployee()).thenReturn(employee);
 
-		// Perform
+		// Perform Get Request
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/employees/getAll").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$[0].id").exists());
@@ -102,7 +123,7 @@ class EmployeeRestControllerTest {
 		Employee mockEmployee = new Employee(1, "test1", "lastname1", null);
 		when(employeeService.getEmployeeById(1)).thenReturn(Optional.of(mockEmployee));
 
-		// Perform
+		// Perform Get Request
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/employees/{id}", 1).contentType(MediaType.APPLICATION_JSON))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
@@ -127,18 +148,14 @@ class EmployeeRestControllerTest {
 		verify(employeeService, times(1)).getEmployeeById(1);
 	}
 
-
-
 	@Test
 	void deleteEmployeeById() throws Exception {
 		int employeeId = 1;
-
+		// Mock
 		mockMvc.perform(MockMvcRequestBuilders.delete("/api/employees/delete/{id}", employeeId)
 				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk());
-
+		// Verify
 		verify(employeeService, times(1)).deleteEmployeeById(employeeId);
 	}
-
-	
 
 }

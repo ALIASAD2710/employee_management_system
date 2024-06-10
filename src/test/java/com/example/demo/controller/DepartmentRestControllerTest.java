@@ -7,6 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
+import org.springframework.validation.FieldError;
 
 import com.example.demo.entity.Department;
 import com.example.demo.service.DepartmentService;
@@ -47,19 +48,16 @@ class DepartmentRestControllerTest {
 	}
 
 	@Test
-	void saveDepartment_200() throws Exception {
-
+	void saveDepartment_200() throws Exception 
+	{
 		// Create
-		Department mockdepartmentToSave = new Department(1, "HR", null);
-		Department mockSaveddepartment = new Department(2, "Sales", null);
-
+		Department mockDepartmentToSave = new Department(1, "HR", null);
+		Department mockSavedDepartment = new Department(2, "Sales", null);
 		// Mock
-		when(departmentService.saveDepartment(any(Department.class))).thenReturn(mockSaveddepartment);
-
+		when(departmentService.saveDepartment(any(Department.class))).thenReturn(mockSavedDepartment);
 		// Perform a POST request
 		mockMvc.perform(post("/api/department/save").contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().writeValueAsString(mockdepartmentToSave))).andExpect(status().isCreated());
-
+				.content(new ObjectMapper().writeValueAsString(mockDepartmentToSave))).andExpect(status().isCreated());
 		// Verify
 		verify(departmentService, times(1)).saveDepartment(any(Department.class));
 	}
@@ -67,20 +65,34 @@ class DepartmentRestControllerTest {
 	@Test
 	void saveDepartment_400() throws Exception {
 		// Create
-		Department mockdepartmentToSave = new Department(1, null, null);
+		Department mockDepartmentToSave = new Department(1, null, null);
 
-		
 		BindingResult bindingResult = mock(BindingResult.class);
 		when(bindingResult.hasErrors()).thenReturn(true);
-		when(bindingResult.getAllErrors()).thenReturn(List.of(new ObjectError("department", "Field cannot be null")));
-
+		when(bindingResult.getFieldErrors())
+				.thenReturn(List.of(new FieldError("department", "name", "Please write your department name")));
 		// POST request
 		mockMvc.perform(post("/api/department/save").contentType(MediaType.APPLICATION_JSON)
-				.content(new ObjectMapper().writeValueAsString(mockdepartmentToSave)))
-				.andExpect(status().isBadRequest());
-
+				.content(new ObjectMapper().writeValueAsString(mockDepartmentToSave)))
+				.andExpect(status().isBadRequest()).andExpect(jsonPath("$.message").value("Validation errors"))
+				.andExpect(jsonPath("$.details[0].field").value("name"))
+				.andExpect(jsonPath("$.details[0].errorMessage").value("Please write your department name"));
 		// Verify
 		verify(departmentService, never()).saveDepartment(any(Department.class));
+	}
+
+	@Test
+	void saveDepartment_500() throws Exception {
+		// Create
+		Department mockDepartmentToSave = new Department(1, "HR", null);
+
+		when(departmentService.saveDepartment(any(Department.class))).thenThrow(new RuntimeException("Error"));
+		// Perform a POST request
+		mockMvc.perform(post("/api/department/save").contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(mockDepartmentToSave)))
+				.andExpect(status().isInternalServerError());
+		// Verify
+		verify(departmentService, times(1)).saveDepartment(any(Department.class));
 	}
 
 	@Test
@@ -135,11 +147,10 @@ class DepartmentRestControllerTest {
 	@Test
 	void deleteDepartmentById() throws Exception {
 		int id = 1;
-
-		mockMvc.perform(
-				MockMvcRequestBuilders.delete("/api/department/delete/{id}", id).contentType(MediaType.APPLICATION_JSON))
-				.andExpect(MockMvcResultMatchers.status().isOk());
-
+		// Mock
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/department/delete/{id}", id)
+				.contentType(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk());
+		// Verify
 		verify(departmentService, times(1)).deleteDepartmentById(id);
 	}
 

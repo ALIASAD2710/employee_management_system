@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entity.Employee;
 import com.example.demo.service.EmployeeService;
+import com.example.demo.utils.ErrorDetail;
+import com.example.demo.utils.ValidationErrorResponse;
 
 import jakarta.validation.Valid;
 
@@ -31,19 +33,21 @@ public class EmployeeController {
 
 	@PostMapping("/save")
 	public ResponseEntity<Object> saveEmployee(@Valid @RequestBody Employee employee, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			// validation errors
-			List<String> validationErrors = bindingResult.getFieldErrors().stream()
-					.map(error -> error.getField() + ": " + error.getDefaultMessage()).toList();
+	    if (bindingResult.hasErrors()) {
+	        List<ErrorDetail> validationErrors = bindingResult.getFieldErrors().stream()
+	                .map(error -> new ErrorDetail(error.getField(), error.getDefaultMessage()))
+	                .toList();
+	        
+	        ValidationErrorResponse errorResponse = new ValidationErrorResponse("Validation errors", validationErrors);
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+	    }
 
-			// error message
-			String errorMessage = "Validation errors: " + String.join(", ", validationErrors);
-
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
-		}
-
-		Employee savedEmployee = employeeService.saveEmployee(employee);
-		return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployee);
+	    try {
+	        Employee savedEmployee = employeeService.saveEmployee(employee);
+	        return ResponseEntity.status(HttpStatus.CREATED).body(savedEmployee);
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while saving the employee.");
+	    }
 	}
 
 	@GetMapping("/getAll")

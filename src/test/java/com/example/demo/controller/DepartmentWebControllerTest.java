@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -98,24 +100,33 @@ class DepartmentWebControllerTest
 	
 	
 	@Test
-    void editDepartment() throws Exception {
-        // Create department object
-        Department department = new Department();
-        department.setId(1);
-        department.setName("Updated Department");
+	void editDepartment() throws Exception {
+	    // Create department object
+	    Department department = new Department();
+	    department.setName("Updated Department");
+	    
+	    int id = 1;
 
-        
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(departmentWebController).build();
+	    MockMvc mockMvc = MockMvcBuilders.standaloneSetup(departmentWebController).build();
 
-        // POST request
-        mockMvc.perform(post("/departments/edit/{id}", 1)
-                .flashAttr("department", department))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/departments/"));
+	    // POST request
+	    mockMvc.perform(post("/departments/edit/{id}", id)
+	            .flashAttr("department", department))
+	            .andExpect(status().is3xxRedirection())
+	            .andExpect(redirectedUrl("/departments/"));
 
-        // Verify
-        verify(departmentService, times(1)).saveDepartment(department);
-    }
+	    // Verify
+	    ArgumentCaptor<Department> departmentCaptor = ArgumentCaptor.forClass(Department.class);
+	    verify(departmentService, times(1)).saveDepartment(departmentCaptor.capture());
+	    
+	    Department capturedDepartment = departmentCaptor.getValue();
+	    //Assert
+	    assertEquals(id, capturedDepartment.getId());
+	    assertEquals("Updated Department", capturedDepartment.getName());
+	}
+
+	
+
 	
 	@Test
     void deleteDepartment() throws Exception {

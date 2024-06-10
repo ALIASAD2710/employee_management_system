@@ -2,8 +2,6 @@ package com.example.demo.entity;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -22,8 +20,7 @@ public class Department {
     @NotBlank(message = "Please write your department name")
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "department")
-    @JsonIgnoreProperties({"department", "hibernateLazyInitializer", "handler"})
+    @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
     private List<Employee> employees;
 
 	

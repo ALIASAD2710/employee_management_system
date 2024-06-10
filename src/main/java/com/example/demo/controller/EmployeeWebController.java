@@ -51,10 +51,11 @@ public class EmployeeWebController {
 
 	@PostMapping("/edit/{id}")
 	public String editEmployee(@PathVariable("id") int id, @ModelAttribute("employee") Employee employee) {
-		employee.setId(id);
-		employeeService.saveEmployee(employee);
-		return REDIRECT_TO_EMPLOYEES;
+	    Employee updatedEmployee = new Employee(id, employee.getFirstName(), employee.getLastName(), employee.getDepartment());
+	    employeeService.saveEmployee(updatedEmployee);
+	    return REDIRECT_TO_EMPLOYEES;
 	}
+
 
 	@GetMapping("/delete/{id}")
 	public String deleteEmployee(@PathVariable("id") int id) {

@@ -23,10 +23,10 @@ public class Employee {
     
     @NotBlank(message = "Please write your last name")
     private String lastName;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
-    @JsonIgnoreProperties({"employees", "hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties("employees")
     private Department department;
 
 	

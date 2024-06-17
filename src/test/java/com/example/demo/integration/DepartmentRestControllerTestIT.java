@@ -8,8 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,105 +19,84 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.example.demo.dao.DepartmentRepository;
+import com.example.demo.dbcon.DbBase;
 import com.example.demo.entity.Department;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Testcontainers
-class DepartmentRestControllerTestIT {
+class DepartmentRestControllerTestIT extends DbBase {
 
-    @Container
-    private static final MySQLContainer<?> mysql = new MySQLContainer<>("mysql:5.7")
-            .withDatabaseName("mydb")
-            .withUsername("root")
-            .withPassword("password")
-            .withReuse(true);
+	@LocalServerPort
+	private int port;
 
-    @LocalServerPort
-    private int port;
+	@Autowired
+	private TestRestTemplate restTemplate;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+	@Autowired
+	private DepartmentRepository departmentRepository;
 
-    @Autowired
-    private DepartmentRepository departmentRepository;
+	@BeforeEach
+	public void setUp() {
+		departmentRepository.deleteAll();
+	}
 
-    @BeforeEach
-    public void setUp() {
-        departmentRepository.deleteAll();
-    }
+	@Test
+	void saveDepartment() {
+		// Given
+		Department departmentToSave = new Department(1, "HR", null);
 
-    @BeforeAll
-    public static void beforeAll() {
-        mysql.start();
-    }
+		String url = "http://localhost:" + port + "/api/department/save";
 
-    @AfterAll
-    public static void afterAll() {
-        mysql.stop();
-    }
+		// When
+		ResponseEntity<Department> responseEntity = restTemplate.postForEntity(url, departmentToSave, Department.class);
 
-    @Test
-    void saveDepartment() {
-        // Given
-        Department departmentToSave = new Department(1, "HR", null);
-        
-        String url = "http://localhost:" + port + "/api/department/save";
+		// Then
+		assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+		assertNotNull(responseEntity.getBody());
 
-        // When
-        ResponseEntity<Department> responseEntity = restTemplate.postForEntity(url, departmentToSave, Department.class);
+		Optional<Department> savedDepartmentOptional = departmentRepository.findById(responseEntity.getBody().getId());
+		assertTrue(savedDepartmentOptional.isPresent());
+		assertEquals("HR", savedDepartmentOptional.get().getName());
+	}
 
-        // Then
-        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-        assertNotNull(responseEntity.getBody());
+	@Test
+	void getAllDepartments() {
+		// Given
+		Department department1 = new Department(1, "HR", null);
+		Department department2 = new Department(2, "Sales", null);
+		departmentRepository.save(department1);
+		departmentRepository.save(department2);
 
-        
-        Optional<Department> savedDepartmentOptional = departmentRepository.findById(responseEntity.getBody().getId());
-        assertTrue(savedDepartmentOptional.isPresent());
-        assertEquals("HR", savedDepartmentOptional.get().getName());
-    }
-    
-    
-    @Test
-    void getAllDepartments() {
-        // Given
-        Department department1 = new Department(1, "HR", null);
-        Department department2 = new Department(2, "Sales", null);
-        departmentRepository.save(department1);
-        departmentRepository.save(department2);
+		String url = "http://localhost:" + port + "/api/department/getAll";
 
-        String url = "http://localhost:" + port + "/api/department/getAll";
+		// When
+		ResponseEntity<List<Department>> responseEntity = restTemplate.exchange(url, HttpMethod.GET, HttpEntity.EMPTY,
+				new ParameterizedTypeReference<List<Department>>() {
+				});
 
-        // When
-        ResponseEntity<List<Department>> responseEntity = restTemplate.exchange(
-            url, HttpMethod.GET, HttpEntity.EMPTY, new ParameterizedTypeReference<List<Department>>() {});
+		// Then
+		assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+		List<Department> departments = responseEntity.getBody();
+		assertNotNull(departments);
+		assertFalse(departments.isEmpty());
+		assertEquals(2, departments.size());
+		assertEquals("HR", departments.get(0).getName());
+		assertEquals("Sales", departments.get(1).getName());
+	}
 
-        // Then
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        List<Department> departments = responseEntity.getBody();
-        assertNotNull(departments);
-        assertFalse(departments.isEmpty());
-        assertEquals(2, departments.size());
-        assertEquals("HR", departments.get(0).getName());
-        assertEquals("Sales", departments.get(1).getName());
-    }
-    
-    @Test
-    void deleteDepartmentById() {
-        // Given
-        Department department = new Department(1, "HR", null);
-        departmentRepository.save(department);
-        String url = "http://localhost:" + port + "/api/department/delete/" + department.getId();
+	@Test
+	void deleteDepartmentById() {
+		// Given
+		Department department = new Department(1, "HR", null);
+		departmentRepository.save(department);
+		String url = "http://localhost:" + port + "/api/department/delete/" + department.getId();
 
-        // When
-        restTemplate.delete(url);
+		// When
+		restTemplate.delete(url);
 
-        // Then
-        assertFalse(departmentRepository.existsById(department.getId()));
-    }
+		// Then
+		assertFalse(departmentRepository.existsById(department.getId()));
+	}
 
 }

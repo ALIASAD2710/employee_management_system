@@ -21,7 +21,7 @@ import com.example.demo.dbcon.DbBase;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TestDepartmentWebControllerE2E extends DbBase {
+class TestDepartmentWebControllerE2E extends DbBase {
 
 	@LocalServerPort
 	private int port;

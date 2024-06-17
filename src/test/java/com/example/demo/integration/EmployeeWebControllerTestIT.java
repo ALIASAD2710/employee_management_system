@@ -18,10 +18,11 @@ import org.springframework.http.ResponseEntity;
 
 import com.example.demo.dao.DepartmentRepository;
 import com.example.demo.dao.EmployeeRepository;
+import com.example.demo.dbcon.DbBase;
 import com.example.demo.entity.Employee;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class EmployeeWebControllerTestIT {
+class EmployeeWebControllerTestIT extends DbBase{
 	@LocalServerPort
 	private int port;
 

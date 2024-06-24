@@ -75,8 +75,10 @@ class EmployeeWebControllerTestIT extends DbBase{
 	@Test
 	void showEditEmployeeForm() {
 		// Given
-		Employee employee = new Employee(1, "test1", "lastname1", null);
-		employeeRepository.save(employee);
+		Employee employee = new Employee();
+        employee.setFirstName("test1");
+        employee.setLastName("lastname1");
+        employeeRepository.save(employee);
 		// When
 		String url = "http://localhost:" + port + "/employees/edit/" + employee.getId();
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);

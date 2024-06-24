@@ -141,19 +141,16 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-
 				<executions>
 					<execution>
-						<id>e2e-tests</id>
+						<id>integration-test</id>
 						<goals>
 							<goal>integration-test</goal>
 							<goal>verify</goal>
 						</goals>
 						<configuration>
-							<excludes>
-								<exclude>**/*IT.java</exclude>
-							</excludes>
 							<includes>
+								<include>**/*IT.java</include>
 								<include>**/*E2E.java</include>
 							</includes>
 						</configuration>
@@ -161,10 +158,18 @@
 				</executions>
 			</plugin>
 
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/*IT.java</exclude>
+						<exclude>**/*E2E.java</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
+
 
 			<plugin>
 				<groupId>org.sonarsource.scanner.maven</groupId>
@@ -202,7 +207,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/EmployeeManagementSystemApplication.*</exclude>
-						<exclude>**/entity/*.*</exclude>						
+						<exclude>**/entity/*.*</exclude>
 					</excludes>
 				</configuration>
 				<executions>

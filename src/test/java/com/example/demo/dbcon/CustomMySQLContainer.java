@@ -35,8 +35,5 @@ public class CustomMySQLContainer extends MySQLContainer<CustomMySQLContainer> {
 		System.out.println("DB_PASSWORD: " + container.getPassword());
 	}
 
-	@Override
-	public void stop() {
-		
-	}
+	
 }

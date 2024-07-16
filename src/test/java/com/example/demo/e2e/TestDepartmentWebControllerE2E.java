@@ -78,13 +78,23 @@ class TestDepartmentWebControllerE2E extends DbBase {
 
     
     @Test
-	void testDeleteDepartment() {
+    void testDeleteDepartment() {
     	// Given
-		testAddDepartment();
-		// When
-		WebElement addedDepartment = driver.findElement(By.xpath("//td[text()='HR']"));
-		addedDepartment.findElement(By.xpath("../td/a[text()='Delete']")).click();
-		// Then
-		assertEquals(0, driver.findElements(By.xpath("//td[text()='HR']")).size());
-	}
+        driver.get("http://localhost:" + port + "/departments/");
+        WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10L));
+        WebElement addDepartmentLink = wait
+                .until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Department")));
+        // When
+        addDepartmentLink.click();
+        WebElement departmentNameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("name")));
+        departmentNameInput.sendKeys("HR");
+        departmentNameInput.submit();
+        // Verify
+        assertTrue(driver.getPageSource().contains("HR"));
+        driver.get("http://localhost:" + port + "/departments/");
+        WebElement addedDepartment = driver.findElement(By.xpath("//td[text()='HR']"));
+        addedDepartment.findElement(By.xpath("../td/a[text()='Delete']")).click();
+        // Assert
+        assertEquals(0, driver.findElements(By.xpath("//td[text()='HR']")).size());
+    }
 }

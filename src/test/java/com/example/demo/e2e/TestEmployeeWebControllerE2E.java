@@ -89,18 +89,15 @@ public class TestEmployeeWebControllerE2E extends DbBase {
         assertTrue(driver.getPageSource().contains("Khan"));
     }
 
+    
     @Test
-    void testDeleteEmployee() {
-        // Given
-        testAddEmployee();
-
-        // When
-        WebElement addedEmployee = driver.findElement(By.xpath("//td[text()='Asad']"));
-        addedEmployee.findElement(By.xpath("../td/a[text()='Delete']")).click();
-
-        // Then
-        WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10L));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//td[text()='Asad']")));
-        assertEquals(0, driver.findElements(By.xpath("//td[text()='Asad']")).size());
-    }
+	void testDeleteEmployee() {
+    	// Given
+		testAddEmployee();
+		// When
+		WebElement addedEmployee = driver.findElement(By.xpath("//td[text()='Asad']"));
+		addedEmployee.findElement(By.xpath("../td/a[text()='Delete']")).click();
+		// Then
+		assertEquals(0, driver.findElements(By.xpath("//td[text()='Asad']")).size());
+	}
 }

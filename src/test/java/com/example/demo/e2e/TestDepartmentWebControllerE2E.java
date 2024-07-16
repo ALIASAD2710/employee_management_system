@@ -76,18 +76,15 @@ class TestDepartmentWebControllerE2E extends DbBase {
         assertTrue(driver.getPageSource().contains("IT"));
     }
 
+    
     @Test
-    void testDeleteDepartment() {
-        // Given
-        testAddDepartment();
-
-        // When
-        WebElement addedDepartment = driver.findElement(By.xpath("//td[text()='HR']"));
-        addedDepartment.findElement(By.xpath("../td/a[text()='Delete']")).click();
-
-        // Then
-        WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10L));
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//td[text()='HR']")));
-        assertEquals(0, driver.findElements(By.xpath("//td[text()='HR']")).size());
-    }
+	void testDeleteDepartment() {
+    	// Given
+		testAddDepartment();
+		// When
+		WebElement addedDepartment = driver.findElement(By.xpath("//td[text()='HR']"));
+		addedDepartment.findElement(By.xpath("../td/a[text()='Delete']")).click();
+		// Then
+		assertEquals(0, driver.findElements(By.xpath("//td[text()='HR']")).size());
+	}
 }

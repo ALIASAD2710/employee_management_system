@@ -87,14 +87,14 @@ class TestDepartmentWebControllerE2E extends DbBase {
         // When
         addDepartmentLink.click();
         WebElement departmentNameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("name")));
-        departmentNameInput.sendKeys("HR");
+        departmentNameInput.sendKeys("Account");
         departmentNameInput.submit();
         // Verify
-        assertTrue(driver.getPageSource().contains("HR"));
+        assertTrue(driver.getPageSource().contains("Account"));
         driver.get("http://localhost:" + port + "/departments/");
-        WebElement addedDepartment = driver.findElement(By.xpath("//td[text()='HR']"));
+        WebElement addedDepartment = driver.findElement(By.xpath("//td[text()='Account']"));
         addedDepartment.findElement(By.xpath("../td/a[text()='Delete']")).click();
         // Assert
-        assertEquals(0, driver.findElements(By.xpath("//td[text()='HR']")).size());
+        assertEquals(0, driver.findElements(By.xpath("//td[text()='Account']")).size());
     }
 }

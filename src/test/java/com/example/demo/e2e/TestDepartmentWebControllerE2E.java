@@ -23,54 +23,71 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TestDepartmentWebControllerE2E extends DbBase {
 
-	@LocalServerPort
-	private int port;
+    @LocalServerPort
+    private int port;
 
-	private static WebDriver driver;
+    private static WebDriver driver;
 
-	@BeforeAll
-	static void setupDriver() {
-		WebDriverManager.chromedriver().setup();
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--headless");
-		driver = new ChromeDriver(options);
-	}
+    @BeforeAll
+    static void setupDriver() {
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        driver = new ChromeDriver(options);
+    }
 
-	@AfterAll
-	static void teardownDriver() {
-		driver.quit();
-	}
+    @AfterAll
+    static void teardownDriver() {
+        driver.quit();
+    }
 
-	@Test
-	void testAddDepartment() {
-		driver.get("http://localhost:" + port + "/departments/");
-		WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10L));
-		WebElement addDepartmentLink = wait
-				.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Department")));
-		addDepartmentLink.click();
-		WebElement departmentNameInput = driver.findElement(By.name("name"));
-		departmentNameInput.sendKeys("HR");
-		departmentNameInput.submit();
-		assertTrue(driver.getPageSource().contains("HR"));
-	}
+    @Test
+    void testAddDepartment() {
+        // Given
+        driver.get("http://localhost:" + port + "/departments/");
+        WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10L));
+        WebElement addDepartmentLink = wait
+                .until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Department")));
 
-	@Test
-	void testEditDepartment() {
-		testAddDepartment();
-		WebElement addedDepartment = driver.findElement(By.xpath("//td[text()='HR']"));
-		addedDepartment.findElement(By.xpath("../td/a[text()='Edit']")).click();
-		WebElement editDepartmentNameInput = driver.findElement(By.name("name"));
-		editDepartmentNameInput.clear();
-		editDepartmentNameInput.sendKeys("IT");
-		editDepartmentNameInput.submit();
-		assertTrue(driver.getPageSource().contains("IT"));
-	}
+        // When
+        addDepartmentLink.click();
+        WebElement departmentNameInput = driver.findElement(By.name("name"));
+        departmentNameInput.sendKeys("HR");
+        departmentNameInput.submit();
 
-	@Test
-	void testDeleteDepartment() {
-		testAddDepartment();
-		WebElement addedDepartment = driver.findElement(By.xpath("//td[text()='HR']"));
-		addedDepartment.findElement(By.xpath("../td/a[text()='Delete']")).click();
-		assertEquals(0, driver.findElements(By.xpath("//td[text()='HR']")).size());
-	}
+        // Then
+        assertTrue(driver.getPageSource().contains("HR"));
+    }
+
+    @Test
+    void testEditDepartment() {
+        // Given
+        testAddDepartment();
+
+        // When
+        WebElement addedDepartment = driver.findElement(By.xpath("//td[text()='HR']"));
+        addedDepartment.findElement(By.xpath("../td/a[text()='Edit']")).click();
+        WebElement editDepartmentNameInput = driver.findElement(By.name("name"));
+        editDepartmentNameInput.clear();
+        editDepartmentNameInput.sendKeys("IT");
+        editDepartmentNameInput.submit();
+
+        // Then
+        assertTrue(driver.getPageSource().contains("IT"));
+    }
+
+    @Test
+    void testDeleteDepartment() {
+        // Given
+        testAddDepartment();
+
+        // When
+        WebElement addedDepartment = driver.findElement(By.xpath("//td[text()='HR']"));
+        addedDepartment.findElement(By.xpath("../td/a[text()='Delete']")).click();
+
+        // Then
+        WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10L));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//td[text()='HR']")));
+        assertEquals(0, driver.findElements(By.xpath("//td[text()='HR']")).size());
+    }
 }

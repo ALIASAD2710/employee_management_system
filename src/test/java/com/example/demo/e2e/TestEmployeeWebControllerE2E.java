@@ -24,69 +24,83 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TestEmployeeWebControllerE2E extends DbBase {
 
-	@LocalServerPort
-	private int port;
+    @LocalServerPort
+    private int port;
 
-	private static WebDriver driver;
+    private static WebDriver driver;
 
-	@BeforeClass
-	public static void setupClass() {
+    @BeforeClass
+    public static void setupClass() {
+        WebDriverManager.chromedriver().setup();
+    }
 
-		// setup Chrome Driver
-		WebDriverManager.chromedriver().setup();
+    @BeforeAll
+    static void setupDriver() {
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        driver = new ChromeDriver(options);
+    }
 
-	}
+    @AfterAll
+    static void teardownDriver() {
+        driver.quit();
+    }
 
-	@BeforeAll
-	static void setupDriver() {
-		WebDriverManager.chromedriver().setup();
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--headless");
-		driver = new ChromeDriver(options);
-	}
+    @Test
+    void testAddEmployee() {
+        // Given
+        driver.get("http://localhost:" + port + "/employees/");
+        WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10L));
+        WebElement addEmployeeLink = wait
+                .until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Employee")));
 
-	@AfterAll
-	static void teardownDriver() {
-		driver.quit();
-	}
+        // When
+        addEmployeeLink.click();
+        WebElement firstNameInput = driver.findElement(By.name("firstName"));
+        firstNameInput.sendKeys("Asad");
+        WebElement lastNameInput = driver.findElement(By.name("lastName"));
+        lastNameInput.sendKeys("Ali");
+        WebElement departmentInput = driver.findElement(By.name("department"));
+        departmentInput.sendKeys("");
+        departmentInput.submit();
 
-	@Test
-	void testAddEmployee() {
-		driver.get("http://localhost:" + port + "/employees/");
-		WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10L));
-		WebElement addEmployeeLink = wait
-				.until(ExpectedConditions.visibilityOfElementLocated(By.linkText("Add Employee")));
-		addEmployeeLink.click();
-		WebElement firstNameInput = driver.findElement(By.name("firstName"));
-		firstNameInput.sendKeys("Asad");
-		WebElement lastNameInput = driver.findElement(By.name("lastName"));
-		lastNameInput.sendKeys("Ali");
-		WebElement departmentInput = driver.findElement(By.name("department"));
-		departmentInput.sendKeys("");
-		departmentInput.submit();
-		assertTrue(driver.getPageSource().contains("Asad"));
-		assertTrue(driver.getPageSource().contains("Ali"));
-		assertTrue(driver.getPageSource().contains(""));
-	}
+        // Then
+        assertTrue(driver.getPageSource().contains("Asad"));
+        assertTrue(driver.getPageSource().contains("Ali"));
+        assertTrue(driver.getPageSource().contains(""));
+    }
 
-	@Test
-	void testEditEmployee() {
-		testAddEmployee();
-		WebElement addedEmployee = driver.findElement(By.xpath("//td[text()='Asad']"));
-		addedEmployee.findElement(By.xpath("../td/a[text()='Edit']")).click();
-		WebElement editLastNameInput = driver.findElement(By.name("lastName"));
-		editLastNameInput.clear();
-		editLastNameInput.sendKeys("Khan");
-		editLastNameInput.submit();
-		assertTrue(driver.getPageSource().contains("Asad"));
-		assertTrue(driver.getPageSource().contains("Khan"));
-	}
+    @Test
+    void testEditEmployee() {
+        // Given
+        testAddEmployee();
 
-	@Test
-	void testDeleteEmployee() {
-		testAddEmployee();
-		WebElement addedEmployee = driver.findElement(By.xpath("//td[text()='Asad']"));
-		addedEmployee.findElement(By.xpath("../td/a[text()='Delete']")).click();
-		assertEquals(0, driver.findElements(By.xpath("//td[text()='Asad']")).size());
-	}
+        // When
+        WebElement addedEmployee = driver.findElement(By.xpath("//td[text()='Asad']"));
+        addedEmployee.findElement(By.xpath("../td/a[text()='Edit']")).click();
+        WebElement editLastNameInput = driver.findElement(By.name("lastName"));
+        editLastNameInput.clear();
+        editLastNameInput.sendKeys("Khan");
+        editLastNameInput.submit();
+
+        // Then
+        assertTrue(driver.getPageSource().contains("Asad"));
+        assertTrue(driver.getPageSource().contains("Khan"));
+    }
+
+    @Test
+    void testDeleteEmployee() {
+        // Given
+        testAddEmployee();
+
+        // When
+        WebElement addedEmployee = driver.findElement(By.xpath("//td[text()='Asad']"));
+        addedEmployee.findElement(By.xpath("../td/a[text()='Delete']")).click();
+
+        // Then
+        WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(10L));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//td[text()='Asad']")));
+        assertEquals(0, driver.findElements(By.xpath("//td[text()='Asad']")).size());
+    }
 }

@@ -37,16 +37,16 @@ jobs:
 
       
       - name: Tests
-        run: mvn verify -Pjacoco
+        run: mvn verify -Pjacoco,mutation-testing
 
       - name: Coveralls Report
-        run: mvn verify coveralls:report -Dcoveralls.repoToken=$COVERALLS_REPO_TOKEN
+        run: mvn test coveralls:report -Dcoveralls.repoToken=$COVERALLS_REPO_TOKEN
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
 
       - name: SonarCloud
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=ALIASAD2710_employee_management_system
+        run: mvn -B test sonar:sonar -Dsonar.projectKey=ALIASAD2710_employee_management_system
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

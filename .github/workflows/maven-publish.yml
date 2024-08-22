@@ -40,7 +40,7 @@ jobs:
         run: mvn verify -DskipCoverage=false -Pmutation-testing
 
       - name: Coveralls Report
-        run: mvn verify -DskipCoverage=true -Pjacoco-coverall coveralls:report -Dcoveralls.repoToken=$COVERALLS_REPO_TOKEN
+        run: mvn verify -DskipCoverage=true -Pjacoco-coverall -Dcoveralls.repoToken=$COVERALLS_REPO_TOKEN
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}

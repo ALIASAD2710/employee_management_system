@@ -134,39 +134,40 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>**/*IT.java</include>
-								<include>**/*E2E.java</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>**/*IT.java</exclude>
-						<exclude>**/*E2E.java</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<executions>
+						<execution>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+							<configuration>
+								<includes>
+									<include>**/*IT.java</include>
+									<include>**/*E2E.java</include>
+								</includes>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<excludes>
+							<exclude>**/*IT.java</exclude>
+							<exclude>**/*E2E.java</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
 				<plugin>
 					<groupId>org.sonarsource.scanner.maven</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
@@ -270,18 +271,7 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>jacoco</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.jacoco</groupId>
-						<artifactId>jacoco-maven-plugin</artifactId>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>coveralls</id>
+			<id>jacoco-coverall</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -293,7 +283,7 @@
 						<artifactId>coveralls-maven-plugin</artifactId>
 						<executions>
 							<execution>
-								<phase>verify</phase>
+								<phase>test</phase>
 								<goals>
 									<goal>report</goal>
 								</goals>
@@ -318,6 +308,25 @@
 								</goals>
 							</execution>
 						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>failsafe-active</id>
+			<activation>
+				<property>
+					<name>skipCoverage</name>
+					<value>!true</value>
+				</property>
+			</activation>
+			<build>
+
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
 					</plugin>
 				</plugins>
 			</build>

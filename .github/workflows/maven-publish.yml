@@ -37,16 +37,16 @@ jobs:
 
       
       - name: Tests
-        run: mvn verify -Pjacoco,mutation-testing
+        run: mvn verify -DskipCoverage=false -Pmutation-testing
 
       - name: Coveralls Report
-        run: mvn test coveralls:report -Dcoveralls.repoToken=$COVERALLS_REPO_TOKEN
+        run: mvn verify -DskipCoverage=true -Pjacoco-coverall coveralls:report -Dcoveralls.repoToken=$COVERALLS_REPO_TOKEN
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
 
       - name: SonarCloud
-        run: mvn -B test sonar:sonar -Dsonar.projectKey=ALIASAD2710_employee_management_system
+        run: mvn -B verify -DskipCoverage=true sonar:sonar -Dsonar.projectKey=ALIASAD2710_employee_management_system
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
